@@ -4,9 +4,11 @@ plugins {
 
 apply plugin: 'java-library'
 apply plugin: 'application'
+apply plugin: 'java'
+apply plugin: 'eclipse'
 
 
-mainClassName="Main"
+mainClassName="TreeGeneration.Main"
 
 applicationDefaultJvmArgs = ["-Xmx1g"]
 
@@ -15,11 +17,10 @@ repositories {
 }
 
 dependencies {
-
 	compile group: 'log4j', name: 'log4j', version: '1.2.17'
-    api 'org.apache.commons:commons-math3:3.6.1'
-    implementation 'com.google.guava:guava:21.0'
-    testImplementation 'junit:junit:4.12'
+	compile group: 'junit', name: 'junit', version: '4.12'
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+	
 }
 
 ssh.settings {
@@ -54,4 +55,14 @@ task deployToServer(dependsOn: installDist) << {
             get from: './java/WikiPediaEntityDictionary/bin/log', into: '.'
         }
     }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
 }
