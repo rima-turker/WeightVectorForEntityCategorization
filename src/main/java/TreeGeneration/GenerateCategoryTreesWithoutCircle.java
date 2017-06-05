@@ -38,7 +38,7 @@ public class GenerateCategoryTreesWithoutCircle
 		HashMap<String, HashSet<String>> hmap_categoryMap = new HashMap<>();
 		try 
 		{
-			BufferedReader br_MainCategory = new BufferedReader(new FileReader(GlobalVariables.path_MainCategories));
+			BufferedReader br_MainCategory = new BufferedReader(new FileReader(Global.path_MainCategories));
 			String line_mainCategory = null;
 			String line=null;
 			while ((line_mainCategory = br_MainCategory.readLine()) != null) 
@@ -47,11 +47,11 @@ public class GenerateCategoryTreesWithoutCircle
 				String str_mainCategoryName = line_mainCategory.replace(">", "").toLowerCase();
 				HashSet<String> hset_allCatsInTree = new HashSet<>();
 
-				for (int i = 1; i <= GlobalVariables.levelOfTheTree ; i++) 
+				for (int i = 1; i <= Global.levelOfTheTree ; i++) 
 				{
 					HashSet<String> hset_tempCats = new HashSet<>();
 					String str_depth=Integer.toString(i);
-					String str_catAndLevel = str_mainCategoryName+GlobalVariables.str_depthSeparator+str_depth;
+					String str_catAndLevel = str_mainCategoryName+Global.str_depthSeparator+str_depth;
 					if (i==1) 
 					{
 						hset_tempCats.add(str_mainCategoryName);
@@ -61,8 +61,8 @@ public class GenerateCategoryTreesWithoutCircle
 					{
 						int int_childDepth = i-1;
 
-						HashSet<String> hsetParents = new HashSet<>(hmap_categoryMap.get(str_mainCategoryName+GlobalVariables.str_depthSeparator+Integer.toString(int_childDepth)));
-						BufferedReader br_MainFile = new BufferedReader(new FileReader(GlobalVariables.path_SkosFile));
+						HashSet<String> hsetParents = new HashSet<>(hmap_categoryMap.get(str_mainCategoryName+Global.str_depthSeparator+Integer.toString(int_childDepth)));
+						BufferedReader br_MainFile = new BufferedReader(new FileReader(Global.path_SkosFile));
 
 						while ((line = br_MainFile.readLine()) != null)
 						{
@@ -110,7 +110,7 @@ public class GenerateCategoryTreesWithoutCircle
 			
 			if (ComparisonFunctions.isZipFile(new File(System.getProperty("user.dir")+str_bigFile))) 
 			{
-				Enumeration<? extends ZipEntry> entries = new ZipFile(GlobalVariables.path_Local+str_bigFile).entries();
+				Enumeration<? extends ZipEntry> entries = new ZipFile(Global.path_Local+str_bigFile).entries();
  				while (entries.hasMoreElements()) 
 				{
 					ZipEntry ze = (ZipEntry) entries.nextElement();
@@ -120,7 +120,7 @@ public class GenerateCategoryTreesWithoutCircle
 					{
 						System.out.println("Reading "+ ze.getName()+"size:"+ze.getSize());
 
-						BufferedReader br_bigFile = new BufferedReader(new InputStreamReader(new ZipFile(GlobalVariables.path_Local+str_bigFile).getInputStream(ze)));
+						BufferedReader br_bigFile = new BufferedReader(new InputStreamReader(new ZipFile(Global.path_Local+str_bigFile).getInputStream(ze)));
 						String line = null;
 
 						bf_Writer.write(ze.getName());

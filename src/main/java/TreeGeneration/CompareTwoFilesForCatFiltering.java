@@ -22,7 +22,7 @@ public class CompareTwoFilesForCatFiltering {
 		Date start = new Date();
 		try {
 				BufferedReader br_mainFile = new BufferedReader(new FileReader(str_FileName));
-				File log= new File(str_FileName+"_CatFiltered"+GlobalVariables.levelOfTheTree);
+				File log= new File(str_FileName+"_CatFiltered"+Global.levelOfTheTree);
 	
 				if (log.exists()) 
 				{
@@ -42,6 +42,7 @@ public class CompareTwoFilesForCatFiltering {
 				HashSet<String> hsetResult = new HashSet<>();
 				while ((lineMain = br_mainFile.readLine()) != null) 
 				{
+			 
 					final String replace = lineMain.split(" ")[1].toLowerCase().replace(">", "").replace("category:", "");
 					if (hset_Cats.contains(replace))
 					{
@@ -53,6 +54,7 @@ public class CompareTwoFilesForCatFiltering {
 					bufferedWriter.write(line);
 					bufferedWriter.newLine();
 				}
+	
 				System.out.println("size"+hsetResult.size());
 				System.out.println("count"+count);
 				count=0;

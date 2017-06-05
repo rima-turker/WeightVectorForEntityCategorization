@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 
 public class CategoryToCategoryPath 
 {
-	final static int levelOfTheTree=GlobalVariables.levelOfTheTree-7;
+	final static int levelOfTheTree=Global.levelOfTheTree-7;
 	final static Map<String,Integer> lhmap_CatToCatPath= new LinkedHashMap<>();
 	
 	public static  void main() throws IOException 

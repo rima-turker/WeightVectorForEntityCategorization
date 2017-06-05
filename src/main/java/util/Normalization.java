@@ -7,19 +7,19 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import TreeGeneration.GlobalVariables;
+import TreeGeneration.Global;
 
 public class Normalization 
 {
 	public static Map<String, HashMap<String, Double>>  normalize_LevelBased(Map<String, HashMap<String, Double>> hmap_addCatValuesTillDepth) 
 	{
 		Map<String, HashMap<String, Double>> hmap_heuResultNormalized = new LinkedHashMap<>();
-		for (Integer i = 1; i <= GlobalVariables.levelOfTheTree; i++) 
+		for (Integer i = 1; i <= Global.levelOfTheTree; i++) 
 		{
 			HashSet<Double> hset_levelallValues= new HashSet<>();
 			for (Entry<String, HashMap<String, Double>> entry :hmap_addCatValuesTillDepth.entrySet()) 
 			{
-				if (entry.getKey().contains(GlobalVariables.str_depthSeparator+i.toString())) 
+				if (entry.getKey().contains(Global.str_depthSeparator+i.toString())) 
 				{
 					HashMap<String, Double> hmap_entAndCat = new HashMap<>(entry.getValue());
 					
@@ -33,7 +33,7 @@ public class Normalization
 				//System.out.println(i.toString()+":"+max);
 				for (Entry<String, HashMap<String, Double>> entry :hmap_addCatValuesTillDepth.entrySet()) 
 				{
-					if (entry.getKey().contains(GlobalVariables.str_depthSeparator+i.toString())) 
+					if (entry.getKey().contains(Global.str_depthSeparator+i.toString())) 
 					{
 						HashMap<String, Double> hmap_CatAndVal = new HashMap<>(entry.getValue());
 						
@@ -53,7 +53,7 @@ public class Normalization
 				int count=0;
 				for (Entry<String, HashMap<String, Double>> entry :hmap_addCatValuesTillDepth.entrySet()) 
 				{
-					if (entry.getKey().contains(GlobalVariables.str_depthSeparator+i.toString())) 
+					if (entry.getKey().contains(Global.str_depthSeparator+i.toString())) 
 					{
 						hmap_heuResultNormalized.put(entry.getKey(), entry.getValue());
 						count++;
@@ -107,9 +107,9 @@ public class Normalization
 			HashSet<Double> hset_ValuesToNormalize = new HashSet<>();
 			String str_entityNameAndDepth = entry.getKey();
 
-			for (Integer i = 1; i <= GlobalVariables.levelOfTheTree; i++) {
+			for (Integer i = 1; i <= Global.levelOfTheTree; i++) {
 
-				LinkedHashMap<String, Double> ll_result = hmap_heuResult.get(str_entity + GlobalVariables.str_depthSeparator + i.toString());
+				LinkedHashMap<String, Double> ll_result = hmap_heuResult.get(str_entity + Global.str_depthSeparator + i.toString());
 
 				for (Entry<String, Double> entry_CatAndValue : ll_result.entrySet()) {
 					hset_ValuesToNormalize.add(entry_CatAndValue.getValue());
@@ -119,8 +119,8 @@ public class Normalization
 			if (hset_ValuesToNormalize.size() > 0) {
 				Map<Double, Double> hmap_NormalizationMap = Normalization.normalizeHashSet(hset_ValuesToNormalize);
 
-				for (Integer i = GlobalVariables.levelOfTheTree; i > 0; i--) {
-					LinkedHashMap<String, Double> ll_result = hmap_heuResult.get(str_entity + GlobalVariables.str_depthSeparator + i.toString());
+				for (Integer i = Global.levelOfTheTree; i > 0; i--) {
+					LinkedHashMap<String, Double> ll_result = hmap_heuResult.get(str_entity + Global.str_depthSeparator + i.toString());
 					lhmap_temp = new LinkedHashMap<>();
 					for (Entry<String, Double> entry_CatAndValue : ll_result.entrySet()) {
 
@@ -129,14 +129,14 @@ public class Normalization
 						lhmap_temp.put(entry_CatAndValue.getKey(),
 								hmap_NormalizationMap.get(entry_CatAndValue.getValue()));
 					}
-					hmap_heuResultNormalized.put(str_entity + GlobalVariables.str_depthSeparator + i.toString(), lhmap_temp);
+					hmap_heuResultNormalized.put(str_entity + Global.str_depthSeparator + i.toString(), lhmap_temp);
 
 				}
 			}
 			else
 			{
-				for (Integer i = GlobalVariables.levelOfTheTree; i > 0; i--) {
-					hmap_heuResultNormalized.put(str_entity + GlobalVariables.str_depthSeparator + i.toString(), lhmap_temp);
+				for (Integer i = Global.levelOfTheTree; i > 0; i--) {
+					hmap_heuResultNormalized.put(str_entity + Global.str_depthSeparator + i.toString(), lhmap_temp);
 				}
 			}
 		}

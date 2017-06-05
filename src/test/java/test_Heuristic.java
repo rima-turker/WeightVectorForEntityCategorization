@@ -9,8 +9,8 @@ import java.util.Map.Entry;
 
 import org.junit.Test;
 
-import TreeGeneration.GlobalVariables;
-import TreeGeneration.GlobalVariables.HeuristicType;
+import TreeGeneration.Global;
+import TreeGeneration.Global.HeuristicType;
 import TreeGeneration.HeurisitcFunctions;
 import TreeGeneration.Print;
 import TreeGeneration.WriteReadFromFile;
@@ -28,8 +28,8 @@ public class test_Heuristic {
 		int int_startingLevelForAnne = 4;
 		int int_startingLevelForVlad = 3;
 		
-		for (GlobalVariables.HeuristicType heu : GlobalVariables.HeuristicType.values()) {
-			HeurisitcFunctions obj_heuristic = new HeurisitcFunctions(hmap_testSet, heu, hmap_testSet.size()/GlobalVariables.levelOfTheTree);
+		for (Global.HeuristicType heu : Global.HeuristicType.values()) {
+			HeurisitcFunctions obj_heuristic = new HeurisitcFunctions(hmap_testSet, heu, hmap_testSet.size()/Global.levelOfTheTree);
 			Map<String, HashMap<String, Double>> hmap_heuResult = obj_heuristic.callHeuristic();
 			
 			if (heu.equals(HeuristicType.HEURISTIC_FIRSTFINDFIRSTDEPTH)) 
@@ -40,7 +40,7 @@ public class test_Heuristic {
 				{
 					HashMap<String, Double> hmap_catAndVal = new HashMap<String, Double>(entry.getValue());
 					Integer int_depth = Integer.parseInt(entry.getKey().substring(
-							entry.getKey().indexOf(GlobalVariables.str_depthSeparator) + GlobalVariables.str_depthSeparator.length(), entry.getKey().length()));
+							entry.getKey().indexOf(Global.str_depthSeparator) + Global.str_depthSeparator.length(), entry.getKey().length()));
 					
 					HashMap<String, Double> hmap_resultCatAndVal = new HashMap<String, Double>();
 					for (Entry<String, Double> entry_catAndVal:hmap_catAndVal.entrySet()) 
@@ -69,7 +69,7 @@ public class test_Heuristic {
 				{
 					HashMap<String, Double> hmap_catAndVal = new HashMap<String, Double>(entry.getValue());
 					Integer int_depth = Integer.parseInt(entry.getKey().substring(
-							entry.getKey().indexOf(GlobalVariables.str_depthSeparator) + GlobalVariables.str_depthSeparator.length(), entry.getKey().length()));
+							entry.getKey().indexOf(Global.str_depthSeparator) + Global.str_depthSeparator.length(), entry.getKey().length()));
 					
 					HashMap<String, Double> hmap_resultCatAndVal = new HashMap<String, Double>();
 					for (Entry<String, Double> entry_catAndVal:hmap_catAndVal.entrySet()) 

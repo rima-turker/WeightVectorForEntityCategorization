@@ -26,7 +26,7 @@ public class WriteReadFromFile
 		ArrayList<String> arrList_result = new ArrayList<>();
 		String line=null;
 		try {
-			BufferedReader br_MainFile = new BufferedReader(new FileReader(GlobalVariables.path_Local+File.separator+str_fileName));
+			BufferedReader br_MainFile = new BufferedReader(new FileReader(Global.path_Local+File.separator+str_fileName));
 			while ((line = br_MainFile.readLine()) != null) 
 			{
 				line= line.toLowerCase();
@@ -43,7 +43,7 @@ public class WriteReadFromFile
 	public static Map<String, HashSet<String>> readEntitiesAndCats(String fileName) {
 		
 		Map<String, HashSet<String>> hmap_groundTruthlist = new LinkedHashMap<>();
-		try (BufferedReader br = new BufferedReader(new FileReader(GlobalVariables.path_Local + fileName));) {
+		try (BufferedReader br = new BufferedReader(new FileReader(Global.path_Local + fileName));) {
 
 			String str_entity = null;
 			String line;
@@ -77,14 +77,14 @@ public class WriteReadFromFile
 	}
 	public static void writeMapFormattedForExell(Map mp,String str_fileName) {
 
-		File file =(new File(GlobalVariables.path_Local+str_fileName+".csv"));
+		File file =(new File(Global.path_Local+str_fileName+".csv"));
 		try {
 			file.createNewFile();
 			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
 			Iterator it = mp.entrySet().iterator();
 			while (it.hasNext()) {
 				Map.Entry pair = (Map.Entry) it.next();
-				String str_entityAndCatList = pair.getKey().toString().replace(GlobalVariables.str_depthSeparator,",")+pair.getValue().toString().replace("{",",").replace("}","");
+				String str_entityAndCatList = pair.getKey().toString().replace(Global.str_depthSeparator,",")+pair.getValue().toString().replace("{",",").replace("}","");
 				bufferedWriter.write(str_entityAndCatList);
 				bufferedWriter.newLine();
 			}
@@ -97,7 +97,7 @@ public class WriteReadFromFile
 
 	public static void writeMapToAFile(Map mp,String str_fileName) {
 
-		File file =(new File(GlobalVariables.path_Local+str_fileName));
+		File file =(new File(Global.path_Local+str_fileName));
 		try {
 			file.createNewFile();
 			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
@@ -118,7 +118,8 @@ public class WriteReadFromFile
 		Map<String, HashMap<String, Double>> hmap_result = new LinkedHashMap<>();
 		String line=null;
 		try {
-			BufferedReader br_MainFile = new BufferedReader(new FileReader(GlobalVariables.path_Local+File.separator+str_fileName));
+			BufferedReader br_MainFile = new BufferedReader(new FileReader(Global.path_Local+File.separator+str_fileName));
+			//BufferedReader br_MainFile = new BufferedReader(new FileReader(str_fileName));
 			while ((line = br_MainFile.readLine()) != null) 
 			{
 				
@@ -148,7 +149,7 @@ public class WriteReadFromFile
 							//strTemp = ,1
 							String strDepth= strTemp.substring(1, strTemp.length());
 							String strEntityName = strSplit.replace(","+strDepth, "");
-							hmap_result.put((strEntityName+GlobalVariables.str_depthSeparator+strDepth), hmap_catAndValues);
+							hmap_result.put((strEntityName+Global.str_depthSeparator+strDepth), hmap_catAndValues);
 							strSplit=strSplit.substring(0, strSplit.length()-strTemp.length());
 							break;
 						

@@ -41,7 +41,7 @@ public class CompareTwoFiles {
 					BufferedReader br_mainFile = new BufferedReader(
 							new InputStreamReader(zf.getInputStream(ze)));
 
-					for (Integer i = 0; i < GlobalVariables.levelOfTheTree; i++) 
+					for (Integer i = 0; i < Global.levelOfTheTree; i++) 
 					{
 						pathTree= System.getProperty("user.dir")+File.separator+"CategoryTrees"+File.separator+"CompleteTree_L";
 						pathTree=pathTree+i.toString();

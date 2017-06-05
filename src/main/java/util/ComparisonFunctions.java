@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import TreeGeneration.GlobalVariables;
+import TreeGeneration.Global;
 
 public class ComparisonFunctions 
 {
@@ -21,9 +21,9 @@ public class ComparisonFunctions
 		{
 			String str_entityNameAndDepth = entry.getKey();
 
-			String str_depth = str_entityNameAndDepth.substring(str_entityNameAndDepth.indexOf(GlobalVariables.str_depthSeparator) + GlobalVariables.str_depthSeparator.length(),
+			String str_depth = str_entityNameAndDepth.substring(str_entityNameAndDepth.indexOf(Global.str_depthSeparator) + Global.str_depthSeparator.length(),
 					str_entityNameAndDepth.length());
-			String str_entityName = str_entityNameAndDepth.substring(0,str_entityNameAndDepth.indexOf(GlobalVariables.str_depthSeparator));
+			String str_entityName = str_entityNameAndDepth.substring(0,str_entityNameAndDepth.indexOf(Global.str_depthSeparator));
 
 			HashMap<String, Double> lhmap_firstCatAnVal = entry.getValue();
 			HashMap<String, Double> lhmap_secondCatAnVal = hmap_second.get(str_entityNameAndDepth);

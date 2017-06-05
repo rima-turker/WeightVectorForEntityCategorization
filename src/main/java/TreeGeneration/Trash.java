@@ -11,7 +11,58 @@ import java.util.Map.Entry;
 public class Trash 
 {
 	/*
-	 * 
+	 * private Map<String, HashMap<String, Double>> initializeTestSetDifferentType(String fileName) 
+	{
+		Map<String, HashMap<String, Double>> hmap_distinctTest = new HashMap<String, HashMap<String,Double>>();
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(fileName));) 
+		{
+			String line = null;
+			//carl_hagenbeck={3={zoology=2, history=1}, 4={biology=1}, 5={biology=2, philosophy=1, arts=2, zoology=1}, 6={botany=2, archaeology=1, biology=2}, 7={archaeology=4, history=1, physics=1}}
+			while ((line = br.readLine()) != null) 
+			{
+				line = line.toLowerCase().replace(" ", "");
+				System.out.println(line);
+				String str_entName = line.substring(0,line.indexOf("="));
+				String str_DepthCats = line.substring(line.indexOf("={")+("={").length(),line.length()).replace(" ", "");
+				
+				String[] str_split = str_DepthCats.split("},");
+				
+				
+				for (int i = 0; i < str_split.length; i++) 
+				{
+					String str_depth = str_split[i].substring(0, 1);
+					System.out.println("depth  "+str_depth);
+					HashMap<String, Double> hmap_CatAndVal = new HashMap<>();
+					String[] catAndVal = str_split[i].substring(1, str_split[i].length()).replace("={","").replace("}","").replaceAll(" ", "").split(",");
+					System.out.println("str_split[i]   "+str_split[i]);
+					for (int j = 0; j < catAndVal.length; j++) 
+					{
+						hmap_CatAndVal.put(catAndVal[j].substring(0, catAndVal[j].indexOf("=")), Double.valueOf(catAndVal[j].split("=")[1]));
+					}
+					hmap_distinctTest.put(str_entName+GlobalVariables.str_depthSeparator+str_depth, hmap_CatAndVal);
+				}
+				Print.printMap(hmap_distinctTest);
+				for (int i = 1; i <= GlobalVariables.levelOfTheTree; i++) 
+				{
+					if (!hmap_distinctTest.containsKey(str_entName+GlobalVariables.str_depthSeparator+i)) 
+					{
+						hmap_distinctTest.put(str_entName+GlobalVariables.str_depthSeparator+i, new HashMap<>());
+					}
+				}
+				
+			}
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			
+		}
+		Print.printMap(hmap_distinctTest);
+		return hmap_distinctTest;
+		
+	}
 	 * private HashMap<String, Double> calculatePrecisionRecall(String str_entity, String str_depth,
 			HashSet<String> hset_retreived) throws Exception {
 

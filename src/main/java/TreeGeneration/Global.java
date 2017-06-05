@@ -2,19 +2,25 @@ package TreeGeneration;
 
 import java.io.File;
 
-public class GlobalVariables 
+public class Global 
 {
 	public static final int levelOfTheTree=7;
 	public static final String path_SkosFile= System.getProperty("user.dir")+ File.separator+ "skos_broader_CatCleaned_sort.txt";
 	public static final String path_MainCategories= System.getProperty("user.dir")+File.separator+"MainCategoryFile.txt";
-	public static final String path_Local = System.getProperty("user.dir") + File.separator + "src" + File.separator + "main"+ File.separator +"resources"+ File.separator +"TreeGeneration"+ File.separator ;
+	public final static  String path_Local = System.getProperty("user.dir") + File.separator + "src" + File.separator + "main"+ File.separator +"resources"+ File.separator +"TreeGeneration"+ File.separator ;
 	public static final String str_depthSeparator = "__";
-//	final static String str_testFileName ="pageLinks_DistinctPaths.csv";
-	final static String str_testFileName = "DistinctPaths_new.csv";
+	final static String str_testFileName ="pageLinks_DistinctPaths.csv";
+	//final static String str_testFileName = "DistinctPaths_new.csv";
 	//final static String str_testFileName = "TestSetDistinctPaths.csv";
 	final static String str_top3FileName = "top_3Elements_Heu6_0.05.csv";
 	final static String str_top1FileName = "top_1Elements_Heu6_0.05.csv";
-	public static final String str_fileNameSkos=  "skos_broader_CatCleaned_sort.txt";
+	public static final String strFileSkos=  "skos_broader_CatCleaned_sort.txt";
+	final  static String str_CatFolder= "CategoryTrees";
+	final static int totalEntityCount = 3819820;
+	final static String str_entitiesWeightVec = "WeightVectorEntities";
+	
+	
+	
 	
 	//public static final String str_testFileName = "test_TestSetDistinctPaths.csv";
 	public enum  HeuristicType 

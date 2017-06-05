@@ -55,7 +55,18 @@ public class Print
 			}
 		}
 	}
-	
+	public static void printMapOnlyCats(Map<String, HashMap<String, Double>> mp) {
+		
+		for (Entry<String, HashMap<String, Double>> entry : mp.entrySet()) 
+		{
+			System.out.print(entry.getKey()+" ");
+			for(Entry <String, Double> entry_catAndVal : entry.getValue().entrySet()) 
+			System.out.print(" "+entry_catAndVal.getKey()+" ");
+			
+			System.out.println();
+			
+		}
+	}
 	public static void printHashMapFormated(Map<String, HashMap<String, Double>> lhmap_print)
 	{
 		String str_format = "=SPLIT(\"";
@@ -63,13 +74,13 @@ public class Print
 		DecimalFormat df = new DecimalFormat("0.00000");
 		for (Entry<String, HashMap<String, Double>> entry : lhmap_print.entrySet()) 
 		{
-			String str_entityName = entry.getKey().substring(0, entry.getKey().indexOf(GlobalVariables.str_depthSeparator));
+			String str_entityName = entry.getKey().substring(0, entry.getKey().indexOf(Global.str_depthSeparator));
 			HashMap<String, Double> hmap_catAndVal = new HashMap<>(entry.getValue());
 			Integer int_depth = Integer.parseInt(entry.getKey().substring(
-					entry.getKey().indexOf(GlobalVariables.str_depthSeparator) + GlobalVariables.str_depthSeparator.length(), entry.getKey().length())); 
+					entry.getKey().indexOf(Global.str_depthSeparator) + Global.str_depthSeparator.length(), entry.getKey().length())); 
 
 			str_format+=""+str_entityName+","+int_depth.toString()+",";
-			for (int i = int_depth; i < GlobalVariables.levelOfTheTree; i++) 
+			for (int i = int_depth; i < Global.levelOfTheTree; i++) 
 			{
 				str_format+=""+",";
 

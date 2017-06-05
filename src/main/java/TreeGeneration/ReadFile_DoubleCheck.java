@@ -53,7 +53,7 @@ public class ReadFile_DoubleCheck
 			}
 			
 			String line=null;
-			BufferedReader br_MainFile = new BufferedReader(new FileReader(GlobalVariables.path_Local+File.separator+"Results_fromFilesCleaned"));
+			BufferedReader br_MainFile = new BufferedReader(new FileReader(Global.path_Local+File.separator+"Results_fromFilesCleaned"));
 			ArrayList<String> arrList_mainFile = WriteReadFromFile.readFileToList("Results_fromFilesCleaned");
 			File Dir = new File(System.getProperty("user.dir")+File.separator+"ResultFilesBasedOnLevel");
 			
@@ -67,7 +67,7 @@ public class ReadFile_DoubleCheck
 				String str_mainCat = entity_CatAndSubCats.getKey();
 				HashSet<String> hset_subCats = entity_CatAndSubCats.getValue();
 				
-				for (Integer i = 1; i <= GlobalVariables.levelOfTheTree; i++) 
+				for (Integer i = 1; i <= Global.levelOfTheTree; i++) 
 				{
 					
 					File log = new File(Dir+File.separator+ "entitiesLevelBased"+i.toString());
@@ -83,10 +83,10 @@ public class ReadFile_DoubleCheck
 					HashSet<String> hset_subCatsBasedonLevel = new HashSet<>();
 					for (String str_subCat: hset_subCats)
 					{
-						if (str_subCat.contains(GlobalVariables.str_depthSeparator+i.toString())) 
+						if (str_subCat.contains(Global.str_depthSeparator+i.toString())) 
 						{
 							//String str_subcat = str_subCat.replace(">", "").replace("category:", "").toLowerCase();
-							hset_subCatsBasedonLevel.add(str_subCat.replace(">", "").replace("category:", "").toLowerCase().substring(0, str_subCat.indexOf(GlobalVariables.str_depthSeparator)));
+							hset_subCatsBasedonLevel.add(str_subCat.replace(">", "").replace("category:", "").toLowerCase().substring(0, str_subCat.indexOf(Global.str_depthSeparator)));
 						}
 					}
 					
@@ -152,7 +152,7 @@ public class ReadFile_DoubleCheck
 		HashMap<String, HashSet<String>> hmap_categoryMap = new HashMap<>();
 		try 
 		{
-			BufferedReader br_MainCategory = new BufferedReader(new FileReader(GlobalVariables.path_MainCategories));
+			BufferedReader br_MainCategory = new BufferedReader(new FileReader(Global.path_MainCategories));
 			String line_mainCategory = null;
 			String line=null;
 			while ((line_mainCategory = br_MainCategory.readLine()) != null) 
@@ -161,11 +161,11 @@ public class ReadFile_DoubleCheck
 				String str_mainCategoryName = line_mainCategory.replace(">", "").toLowerCase();
 				HashSet<String> hset_allCatsInTree = new HashSet<>();
 				
-				for (int i = 1; i <= GlobalVariables.levelOfTheTree ; i++) 
+				for (int i = 1; i <= Global.levelOfTheTree ; i++) 
 				{
 					HashSet<String> hset_tempCats = new HashSet<>();
 					String str_depth=Integer.toString(i);
-					String str_catAndLevel = str_mainCategoryName+GlobalVariables.str_depthSeparator+str_depth;
+					String str_catAndLevel = str_mainCategoryName+Global.str_depthSeparator+str_depth;
 					if (i==1) 
 					{
 						hset_tempCats.add(str_mainCategoryName);
@@ -175,8 +175,8 @@ public class ReadFile_DoubleCheck
 					{
 						int int_childDepth = i-1;
 						
-						HashSet<String> hsetParents = new HashSet<>(hmap_categoryMap.get(str_mainCategoryName+GlobalVariables.str_depthSeparator+Integer.toString(int_childDepth)));
-						BufferedReader br_MainFile = new BufferedReader(new FileReader(GlobalVariables.path_SkosFile));
+						HashSet<String> hsetParents = new HashSet<>(hmap_categoryMap.get(str_mainCategoryName+Global.str_depthSeparator+Integer.toString(int_childDepth)));
+						BufferedReader br_MainFile = new BufferedReader(new FileReader(Global.path_SkosFile));
 						
 						while ((line = br_MainFile.readLine()) != null)
 						{
@@ -215,23 +215,23 @@ public class ReadFile_DoubleCheck
 		
 		try 
 		{
-			BufferedReader br_MainCategory = new BufferedReader(new FileReader(GlobalVariables.path_MainCategories));
+			BufferedReader br_MainCategory = new BufferedReader(new FileReader(Global.path_MainCategories));
 			String line_mainCategory = null;
 			String line=null;
-			BufferedReader br_MainFile = new BufferedReader(new FileReader(GlobalVariables.path_SkosFile));
+			BufferedReader br_MainFile = new BufferedReader(new FileReader(Global.path_SkosFile));
 			
 			
 			while ((line_mainCategory = br_MainCategory.readLine()) != null) 
 			{
 				String str_mainCategoryName = line_mainCategory.replace(">", "").toLowerCase();
 				HashSet<String> hset_catAndLevel = new HashSet<>();
-				for (Integer i = 1; i <= GlobalVariables.levelOfTheTree ; i++) 
+				for (Integer i = 1; i <= Global.levelOfTheTree ; i++) 
 				{
 					String str_depth= i.toString();
 					
 					if (i==1) 
 					{
-						hset_catAndLevel.add((line_mainCategory.replace(">", "")+GlobalVariables.str_depthSeparator+str_depth).toLowerCase());
+						hset_catAndLevel.add((line_mainCategory.replace(">", "")+Global.str_depthSeparator+str_depth).toLowerCase());
 					}
 					else
 					{
@@ -240,13 +240,13 @@ public class ReadFile_DoubleCheck
 						for (String str_category :hset_catAndLevel) 
 						{
 							Integer int_parentIndex = i-1;
-							if (str_category.contains(GlobalVariables.str_depthSeparator+int_parentIndex.toString())) 
+							if (str_category.contains(Global.str_depthSeparator+int_parentIndex.toString())) 
 							{
-								hsetParents.add(str_category.substring(0, (str_category.indexOf(GlobalVariables.str_depthSeparator))));
+								hsetParents.add(str_category.substring(0, (str_category.indexOf(Global.str_depthSeparator))));
 								//System.out.println(str_category);
 							}
 						}
-						br_MainFile = new BufferedReader(new FileReader(GlobalVariables.path_SkosFile));
+						br_MainFile = new BufferedReader(new FileReader(Global.path_SkosFile));
 						String lineCategory;
 
 						int count = 0;
@@ -256,17 +256,17 @@ public class ReadFile_DoubleCheck
 						{
 							if (hsetParents.contains(line.split(" ")[1].replace(">", "").toLowerCase()))
 							{
-								if (!hset_catAndLevel.contains((line.split(" ")[0].replace(">", "").toLowerCase()+GlobalVariables.str_depthSeparator+str_depth))) 
+								if (!hset_catAndLevel.contains((line.split(" ")[0].replace(">", "").toLowerCase()+Global.str_depthSeparator+str_depth))) 
 								{
 									count++;
 								}
-								hset_catAndLevel.add(line.split(" ")[0].replace(">", "").toLowerCase()+GlobalVariables.str_depthSeparator+str_depth);
+								hset_catAndLevel.add(line.split(" ")[0].replace(">", "").toLowerCase()+Global.str_depthSeparator+str_depth);
 								
 								
 							}
 						}
 						
-						System.out.println(str_mainCategoryName+GlobalVariables.str_depthSeparator+ i.toString()+" "+count+" "+hset_catAndLevel.size());
+						System.out.println(str_mainCategoryName+Global.str_depthSeparator+ i.toString()+" "+count+" "+hset_catAndLevel.size());
 						
 //						for(String hsetline:hsetParents) 
 //						{
@@ -303,12 +303,12 @@ public class ReadFile_DoubleCheck
 			HashSet<String> hset_catAndLevel = hmap_catMap.get(str_mainCat);
 			
 			
-			for (Integer i = 1; i <= GlobalVariables.levelOfTheTree; i++) 
+			for (Integer i = 1; i <= Global.levelOfTheTree; i++) 
 			{
 				int int_count = 0;
 				for (String string : hset_catAndLevel) 
 				{
-					if (string.contains(GlobalVariables.str_depthSeparator+i.toString())) 
+					if (string.contains(Global.str_depthSeparator+i.toString())) 
 					{
 						int_count++;
 					}
@@ -338,7 +338,7 @@ public class ReadFile_DoubleCheck
 			
 			if (isZip) 
 			{
-				ZipFile zf = new ZipFile(GlobalVariables.path_Local+str_bigFile);
+				ZipFile zf = new ZipFile(Global.path_Local+str_bigFile);
 				
 				Enumeration<? extends ZipEntry> entries = zf.entries();
 //				while (entries.hasMoreElements()) 
@@ -379,7 +379,7 @@ public class ReadFile_DoubleCheck
 			}
 			else
 			{
-				BufferedReader br_bigFile = new BufferedReader(new FileReader(GlobalVariables.path_Local+str_bigFile));
+				BufferedReader br_bigFile = new BufferedReader(new FileReader(Global.path_Local+str_bigFile));
 				String line = null;
 				while ((line = br_bigFile.readLine()) != null) 
 				{
@@ -407,7 +407,7 @@ public class ReadFile_DoubleCheck
 		HashSet<String> hset_results = new HashSet<>();
 		try 
 		{
-			BufferedReader br_FamEntities = new BufferedReader(new FileReader(GlobalVariables.path_Local+str_fileName));
+			BufferedReader br_FamEntities = new BufferedReader(new FileReader(Global.path_Local+str_fileName));
 			String line = null;
 			while ((line = br_FamEntities.readLine()) != null) 
 			{

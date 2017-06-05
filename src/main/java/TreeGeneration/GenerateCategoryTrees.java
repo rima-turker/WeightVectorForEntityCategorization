@@ -19,7 +19,7 @@ public class GenerateCategoryTrees {
 	 * @param args
 	 * @throws FileNotFoundException 
 	 */
-	static int level=GlobalVariables.levelOfTheTree;
+	static int level=Global.levelOfTheTree;
 	static int categoryNCount=35;
 	
 	public static void main() throws IOException
@@ -30,7 +30,7 @@ public class GenerateCategoryTrees {
 
 		//File log = new File(categoryName+"L"+Integer.parseInt(number)+1);
 		
-		String pathMainCategories = GlobalVariables.path_MainCategories;
+		String pathMainCategories = Global.path_MainCategories;
 		
 		br_MainCategory = new BufferedReader(new FileReader(pathMainCategories));
 		String line_mainCategory = null;

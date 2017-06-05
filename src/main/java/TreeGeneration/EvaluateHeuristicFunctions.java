@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.junit.experimental.theories.Theories;
 
-import TreeGeneration.GlobalVariables.HeuristicType;
+import TreeGeneration.Global.HeuristicType;
 import util.ComparisonFunctions;
 import util.MapUtil;
 import util.Normalization;
@@ -35,7 +35,7 @@ public class EvaluateHeuristicFunctions<K> {
 
 	private static String str_depthSeparator = "__";
 	private double threshold;
-	private  GlobalVariables.HeuristicType heuristic;
+	private  Global.HeuristicType heuristic;
 	private String str_fileNameGroundTruthList;
 	final private int int_topElementCount =1;
 	
@@ -48,7 +48,7 @@ public class EvaluateHeuristicFunctions<K> {
 	public static final Set<Double> hset_fmeasure = new HashSet<>();
 	
 	public EvaluateHeuristicFunctions(final String str_fileNameGroundTruthList,
-			final Double db_threshold, final GlobalVariables.HeuristicType heu)
+			final Double db_threshold, final Global.HeuristicType heu)
 	{
 		this.heuristic= heu;
 		this.str_fileNameGroundTruthList=str_fileNameGroundTruthList;
@@ -59,7 +59,7 @@ public class EvaluateHeuristicFunctions<K> {
 	public void main() throws Exception {
 		hmap_groundTruth = new LinkedHashMap<>(initializeGroundTruthAndList(str_fileNameGroundTruthList));
 		final Map<String, HashMap<String, Double>> hmap_testSetDistinctPaths = WriteReadFromFile
-				.readTestSet(GlobalVariables.str_testFileName);
+				.readTestSet(Global.str_testFileName);
 		final HeurisitcFunctions heurisitcFun = new HeurisitcFunctions(hmap_testSetDistinctPaths, getHeuristic(),
 				hmap_groundTruth.size());
 		final Map<String, HashMap<String, Double>> hmap_heuResult = new LinkedHashMap<>(heurisitcFun.callHeuristic());
@@ -109,7 +109,7 @@ public class EvaluateHeuristicFunctions<K> {
 	
 	private void compareTopElementWithGroundTruth()
 	{
-		Map<String, HashSet<String>> hmap_topSet = new LinkedHashMap<>(WriteReadFromFile.readEntitiesAndCats(GlobalVariables.str_top1FileName));
+		Map<String, HashSet<String>> hmap_topSet = new LinkedHashMap<>(WriteReadFromFile.readEntitiesAndCats(Global.str_top1FileName));
 		//Print.printMap(hmap_topSet);
 		int counter =0;
 		for(Entry<String, HashSet<String>>  entry : hmap_topSet.entrySet() )
@@ -130,7 +130,7 @@ public class EvaluateHeuristicFunctions<K> {
 	{
 		for (Entry<String, HashMap<String, Double>> entry : hmap_filteredResults.entrySet()) 
 		{
-			if (entry.getKey().contains(Integer.toString(GlobalVariables.levelOfTheTree))) 
+			if (entry.getKey().contains(Integer.toString(Global.levelOfTheTree))) 
 			{
 				HashMap<String, Double> hmap_catAndVal = new HashMap<>(entry.getValue());
 				System.out.print(entry.getKey().substring(0,
@@ -159,7 +159,7 @@ public class EvaluateHeuristicFunctions<K> {
 				Double db_catVal = entry_cat.getValue();
 				for (Integer i = 1; i < Integer.parseInt(str_depth); i++) {
 					Map<String, Double> lhmap_temp = new LinkedHashMap<>(
-							hmap_heuResult.get(str_entityName + GlobalVariables.str_depthSeparator + i.toString()));
+							hmap_heuResult.get(str_entityName + Global.str_depthSeparator + i.toString()));
 
 					if (lhmap_temp.containsKey(str_cat)) {
 						db_catVal += lhmap_temp.get(str_cat);
@@ -176,7 +176,7 @@ public class EvaluateHeuristicFunctions<K> {
 		for (Entry<String, String> entry : hmap_groundTruth.entrySet()) {
 			String str_entity = entry.getKey();
 
-			for (int i = 0; i < GlobalVariables.levelOfTheTree; i++) {
+			for (int i = 0; i < Global.levelOfTheTree; i++) {
 				LinkedHashMap<String, Double> ll_currCatAndVal = hmap_result
 						.get(str_entity + str_depthSeparator + String.valueOf(i));
 
@@ -212,7 +212,7 @@ public class EvaluateHeuristicFunctions<K> {
 		}
 		for (Entry<String, String> entry : hmap_groundTruth.entrySet()) {
 			String str_entity = entry.getKey();
-			for (Integer i = GlobalVariables.levelOfTheTree; i >= 1; i--) {
+			for (Integer i = Global.levelOfTheTree; i >= 1; i--) {
 				hmap_resultAddCat_sort.put(str_entity + str_depthSeparator + i.toString(),
 						hmap_resultAddCat.get(str_entity + str_depthSeparator + i.toString()));
 			}
@@ -252,11 +252,11 @@ public class EvaluateHeuristicFunctions<K> {
 		String str_Rec = "=SPLIT(\"";
 		String str_Fsco = "=SPLIT(\"";
 
-		for (Integer int_depth = GlobalVariables.levelOfTheTree; int_depth > 0; int_depth--) {
+		for (Integer int_depth = Global.levelOfTheTree; int_depth > 0; int_depth--) {
 			int int_NumberOfEntities = 0;
-			Double[] arr_Pre = new Double[GlobalVariables.levelOfTheTree];
+			Double[] arr_Pre = new Double[Global.levelOfTheTree];
 			Arrays.fill(arr_Pre, 0.);
-			Double[] arr_Rec = new Double[GlobalVariables.levelOfTheTree];
+			Double[] arr_Rec = new Double[Global.levelOfTheTree];
 			Arrays.fill(arr_Rec, 0.);
 
 			for (Entry<String, HashMap<String, Double>> entry : hmap_precisionRecall.entrySet()) {
@@ -292,9 +292,9 @@ public class EvaluateHeuristicFunctions<K> {
 				averageFScore = PrecisionAndRecallCalculator.FmeasureCalculate(Double.parseDouble(averagePrecision), Double.parseDouble(averageRecall));
 				hset_fmeasure.add(averageFScore);
 			}
-			hmap_fmeasure.put(getHeuristic()+" Fmeasure"+GlobalVariables.str_depthSeparator+int_depth.toString()
+			hmap_fmeasure.put(getHeuristic()+" Fmeasure"+Global.str_depthSeparator+int_depth.toString()
 					, averageFScore);
-			hmap_fmeasureAll.put(getHeuristic()+" "+ getThreshold()+" Fmeasure"+GlobalVariables.str_depthSeparator+int_depth.toString()
+			hmap_fmeasureAll.put(getHeuristic()+" "+ getThreshold()+" Fmeasure"+Global.str_depthSeparator+int_depth.toString()
 			, averageFScore);
 			str_Pre = str_Pre + " ," + averagePrecision;
 			str_Rec = str_Rec + " ," + averageRecall;
@@ -325,7 +325,7 @@ public class EvaluateHeuristicFunctions<K> {
 	public Map<String, String> initializeGroundTruthAndList(String fileName) {
 		
 		Map<String, String> hmap_groundTruth = new LinkedHashMap<>();
-		try (BufferedReader br = new BufferedReader(new FileReader(GlobalVariables.path_Local + fileName));) {
+		try (BufferedReader br = new BufferedReader(new FileReader(Global.path_Local + fileName));) {
 
 			String str_entity = null, str_mainCat = null;
 			String line;
@@ -412,7 +412,7 @@ public class EvaluateHeuristicFunctions<K> {
 		int int_catNumberBeforeFilter = 0;
 		int int_catNumberFiltered = 0;
 		
-		int[] arrNumberOfFilteredCats = new int[GlobalVariables.levelOfTheTree];
+		int[] arrNumberOfFilteredCats = new int[Global.levelOfTheTree];
 
 		for (Entry<String, HashMap<String, Double>> entry : hmap_normalizedDepthBased.entrySet()) {
 			// for (Entry<String, LinkedHashMap<String, Double>> entry :
@@ -445,7 +445,7 @@ public class EvaluateHeuristicFunctions<K> {
 	}
 
 	private void compareResultsWithGroundTruth(Map<String, LinkedHashMap<String, Double>> hmap_heuResult) {
-		int[] arr_FoundDepth = new int[GlobalVariables.levelOfTheTree];
+		int[] arr_FoundDepth = new int[Global.levelOfTheTree];
 		int count_Cat = 0;
 		int count_NotFoundCat = 0;
 
@@ -539,7 +539,7 @@ public class EvaluateHeuristicFunctions<K> {
 		BufferedReader brC;
 		ArrayList<Double> arrListTemp;
 		try {
-			brC = new BufferedReader(new FileReader(GlobalVariables.path_Local + "SubCategory_Count.csv"));
+			brC = new BufferedReader(new FileReader(Global.path_Local + "SubCategory_Count.csv"));
 			String lineCategory = null;
 
 			while ((lineCategory = brC.readLine()) != null) {
@@ -589,7 +589,7 @@ public class EvaluateHeuristicFunctions<K> {
 			String str_entityNameAndDepth = entry.getKey();
 
 			LinkedList<Double> llist_test = new LinkedList<>();
-			for (Integer i = 1; i <= GlobalVariables.levelOfTheTree; i++) {
+			for (Integer i = 1; i <= Global.levelOfTheTree; i++) {
 
 				LinkedHashMap<String, Double> ll_result = hmap_resultNormalizedFiltered
 						.get(str_entity + str_depthSeparator + i.toString());
@@ -619,9 +619,9 @@ public class EvaluateHeuristicFunctions<K> {
 		String str_entityName = null;
 		String str_catName = null;
 		Integer int_count_ = 0;
-		try (BufferedReader br = new BufferedReader(new FileReader(GlobalVariables.path_Local + fileName));) {
+		try (BufferedReader br = new BufferedReader(new FileReader(Global.path_Local + fileName));) {
 			String line = null;
-			int depth = GlobalVariables.levelOfTheTree;
+			int depth = Global.levelOfTheTree;
 
 			ArrayList<String> arrList_paths = new ArrayList<>();
 
@@ -653,7 +653,7 @@ public class EvaluateHeuristicFunctions<K> {
 					}
 				}
 				if (depth == 0) {
-					depth = GlobalVariables.levelOfTheTree;
+					depth = Global.levelOfTheTree;
 					// hmap_entityStartingCat.put(str_entityName, ++int_count_);
 					int_count_ = 0;
 				}
@@ -678,7 +678,7 @@ public class EvaluateHeuristicFunctions<K> {
 		return threshold;
 	}
 
-	public GlobalVariables.HeuristicType getHeuristic() {
+	public Global.HeuristicType getHeuristic() {
 		return heuristic;
 	}
 	public int getInt_topElementCount() {

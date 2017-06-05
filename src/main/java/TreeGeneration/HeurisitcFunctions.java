@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
-import TreeGeneration.GlobalVariables.HeuristicType;
+import TreeGeneration.Global.HeuristicType;
 
 
 public class HeurisitcFunctions 
@@ -18,7 +18,7 @@ public class HeurisitcFunctions
 	//private HashSet<String> hset_entityList;
 	private final HeuristicType heuristicType;
 	private final int int_totalEntityCount;
-	public HeurisitcFunctions(Map<String, HashMap<String, Double>> hmap_testSetDistinctPaths, GlobalVariables.HeuristicType heuristic,
+	public HeurisitcFunctions(Map<String, HashMap<String, Double>> hmap_testSetDistinctPaths, Global.HeuristicType heuristic,
 			int int_totalEntityCount)
 	{
 		this.hmap_testSet=new LinkedHashMap<>(hmap_testSetDistinctPaths);
@@ -34,9 +34,9 @@ public class HeurisitcFunctions
 		Map<String, Integer> hmap_tfidfCatDeptVal = new HashMap<>(initializeMapForTFIDF(hmap_testSet));
 		for (Entry<String, HashMap<String, Double>> entry : hmap_testSet.entrySet()) {
 			String str_entityNameAndDepth = entry.getKey();
-			String str_entityName = str_entityNameAndDepth.substring(0, str_entityNameAndDepth.indexOf(GlobalVariables.str_depthSeparator));
+			String str_entityName = str_entityNameAndDepth.substring(0, str_entityNameAndDepth.indexOf(Global.str_depthSeparator));
 			String str_depth = str_entityNameAndDepth.substring(
-					str_entityNameAndDepth.indexOf(GlobalVariables.str_depthSeparator) + GlobalVariables.str_depthSeparator.length(), str_entityNameAndDepth.length());
+					str_entityNameAndDepth.indexOf(Global.str_depthSeparator) + Global.str_depthSeparator.length(), str_entityNameAndDepth.length());
 			Map<String, Double> hmap_Values = new HashMap<>(entry.getValue());
 			HashMap<String, Double> lhmap_Results = new LinkedHashMap<>();
 
@@ -45,25 +45,25 @@ public class HeurisitcFunctions
 				Double db_pathCount = entry_hmapValues.getValue();
 				Double db_heuValue = 0.0;
 		
-				if (getHeuristicType().equals(GlobalVariables.HeuristicType.HEURISTIC_NUMBEROFPATHS)) {
+				if (getHeuristicType().equals(Global.HeuristicType.HEURISTIC_NUMBEROFPATHS)) {
 					db_heuValue = Heuristic_NumberOfPaths(db_pathCount);
-				} else if (getHeuristicType().equals(GlobalVariables.HeuristicType.HEURISTIC_NUMBEROFPATHSANDDEPTH)) {
+				} else if (getHeuristicType().equals(Global.HeuristicType.HEURISTIC_NUMBEROFPATHSANDDEPTH)) {
 					db_heuValue = Heuristic_NumberOfPathsAndDepth(db_pathCount, Integer.parseInt(str_depth));
 				}
-				else if(getHeuristicType().equals(GlobalVariables.HeuristicType.HEURISTIC_FIRSTFINDFIRSTDEPTH))
+				else if(getHeuristicType().equals(Global.HeuristicType.HEURISTIC_FIRSTFINDFIRSTDEPTH))
 				{
 					db_heuValue = Heuristic_FirstPathsAndDepth(str_entityName,db_pathCount, Integer.parseInt(str_depth)) ;
 				}
 				else  
 					
-					if(getHeuristicType().equals(GlobalVariables.HeuristicType.HEURISTIC_FIRSTFINDFIRSTDEPTHEXPONENTIAL))
+					if(getHeuristicType().equals(Global.HeuristicType.HEURISTIC_FIRSTFINDFIRSTDEPTHEXPONENTIAL))
 				{
 					db_heuValue = Heuristic_FirstPathsAndDepthExp(str_entityName,db_pathCount, Integer.parseInt(str_depth)) ;
-				} else if(getHeuristicType().equals(GlobalVariables.HeuristicType.HEURISTIC_TFIDF))
+				} else if(getHeuristicType().equals(Global.HeuristicType.HEURISTIC_TFIDF))
 				{
 					db_heuValue = Heuristic_tfidf(str_catName,db_pathCount,str_depth,hmap_tfidfCatDeptVal) ;
 				}
-				else if(getHeuristicType().equals(GlobalVariables.HeuristicType.HEURISTIC_COMBINATION4TH5TH))
+				else if(getHeuristicType().equals(Global.HeuristicType.HEURISTIC_COMBINATION4TH5TH))
 				{
 					db_heuValue = Heuristic_combination4th5th(str_entityName,str_catName,db_pathCount,str_depth,hmap_tfidfCatDeptVal) ;
 				}
@@ -83,9 +83,9 @@ public class HeurisitcFunctions
 		for (Entry<String, HashMap<String, Double>> entry_EntDeptCatVal : hmap_testSet.entrySet()) 
 		{
 			String str_entityNameAndDepth = entry_EntDeptCatVal.getKey();
-			String str_entityName = str_entityNameAndDepth.substring(0, str_entityNameAndDepth.indexOf(GlobalVariables.str_depthSeparator));
+			String str_entityName = str_entityNameAndDepth.substring(0, str_entityNameAndDepth.indexOf(Global.str_depthSeparator));
 			String str_depth = str_entityNameAndDepth.substring(
-					str_entityNameAndDepth.indexOf(GlobalVariables.str_depthSeparator) + GlobalVariables.str_depthSeparator.length(), str_entityNameAndDepth.length());
+					str_entityNameAndDepth.indexOf(Global.str_depthSeparator) + Global.str_depthSeparator.length(), str_entityNameAndDepth.length());
 
 			Integer int_dept = Integer.parseInt(str_depth);
 			HashMap<String, Double> hmap_CatVal = entry_EntDeptCatVal.getValue();
@@ -96,7 +96,7 @@ public class HeurisitcFunctions
 			{
 				String str_catName = entry_hmapValues.getKey();
 
-				String str_catDepth = entry_hmapValues.getKey()+GlobalVariables.str_depthSeparator+str_depth;
+				String str_catDepth = entry_hmapValues.getKey()+Global.str_depthSeparator+str_depth;
 
 				if (hmap_resultCatDepVal.containsKey(str_catDepth)) 
 				{
@@ -140,9 +140,9 @@ public class HeurisitcFunctions
 	}
 	private double Heuristic_tfidf(String str_catName,double db_Value, String str_depth,Map<String, Integer> hmap_tfidfCatDeptVal) 
 	{
-		if (hmap_tfidfCatDeptVal.containsKey(str_catName+GlobalVariables.str_depthSeparator+str_depth))
+		if (hmap_tfidfCatDeptVal.containsKey(str_catName+Global.str_depthSeparator+str_depth))
 		{
-			return (double) (db_Value * (double) Math.log10(this.int_totalEntityCount*1.0 /(double) hmap_tfidfCatDeptVal.get(str_catName+GlobalVariables.str_depthSeparator+str_depth)));
+			return (double) (db_Value * (double) Math.log10(this.int_totalEntityCount*1.0 /(double) hmap_tfidfCatDeptVal.get(str_catName+Global.str_depthSeparator+str_depth)));
 		}
 		else
 		{
@@ -155,13 +155,13 @@ public class HeurisitcFunctions
 	{
 		int int_depth= Integer.parseInt(str_depth);
 		int int_entitystartingDepth=  findLevelFirstPathDiscovered(getHmap_testSet(), str_entity);;
-		if (hmap_tfidfCatDeptVal.containsKey(str_catName+GlobalVariables.str_depthSeparator+str_depth))
+		if (hmap_tfidfCatDeptVal.containsKey(str_catName+Global.str_depthSeparator+str_depth))
 		{
-			return (double) ((db_Value / Math.pow(2.0,(double) (int_depth-int_entitystartingDepth))))* (double) Math.log10(this.int_totalEntityCount *1.0 / hmap_tfidfCatDeptVal.get(str_catName+GlobalVariables.str_depthSeparator+str_depth));
+			return (double) ((db_Value / Math.pow(2.0,(double) (int_depth-int_entitystartingDepth))))* (double) Math.log10(this.int_totalEntityCount *1.0 / hmap_tfidfCatDeptVal.get(str_catName+Global.str_depthSeparator+str_depth));
 		}																							
 		else
 		{
-			System.out.println(str_catName+GlobalVariables.str_depthSeparator+str_depth);
+			System.out.println(str_catName+Global.str_depthSeparator+str_depth);
 			System.err.println("ERROR");
 			return 0.;
 		}
@@ -182,10 +182,10 @@ public class HeurisitcFunctions
 
 	public static int findLevelFirstPathDiscovered(Map<String, HashMap<String, Double>> hmap_testSet,String str_entity) {
 
-		for (Integer i = 1; i <= GlobalVariables.levelOfTheTree; i++) 
+		for (Integer i = 1; i <= Global.levelOfTheTree; i++) 
 		{
 			//HashMap<String, Double> hmap_catAndVal = hmap_testSet.get(str_entity+GlobalVariables.str_depthSeparator+i.toString());
-			HashMap<String, Double> hmap_catAndVal = hmap_testSet.get(str_entity+GlobalVariables.str_depthSeparator+i.toString());
+			HashMap<String, Double> hmap_catAndVal = hmap_testSet.get(str_entity+Global.str_depthSeparator+i.toString());
 			if (!hmap_catAndVal.isEmpty()) 
 			{
 				return i;
