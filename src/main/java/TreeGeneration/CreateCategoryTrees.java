@@ -86,7 +86,7 @@ public class CreateCategoryTrees
 	public static void writeCategoryTreeToAFile(Map<String, HashSet <String>> hmap, String str_folderName) {
 
 		
-		File folder =(new File(Global.path_Local+str_folderName));
+		File folder =(new File(Global.pathLocal+str_folderName));
 		folder.mkdir();
 	
 		try {
@@ -94,7 +94,7 @@ public class CreateCategoryTrees
 			for (Entry<String, HashSet <String>> entry: hmap.entrySet()) 
 			{
 				String str_entName = entry.getKey();
-				File file = new File(Global.path_Local+ str_entName);
+				File file = new File(Global.pathLocal+ str_entName);
 				file.createNewFile();
 				BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
 				
@@ -126,7 +126,7 @@ public class CreateCategoryTrees
 		ArrayList<String> arrList_result = new ArrayList<>();
 		String line=null;
 		try {
-			BufferedReader br_MainFile = new BufferedReader(new FileReader(Global.path_Local+File.separator+str_fileName));
+			BufferedReader br_MainFile = new BufferedReader(new FileReader(Global.pathLocal+File.separator+str_fileName));
 			while ((line = br_MainFile.readLine()) != null) 
 			{
 				line= line.toLowerCase();

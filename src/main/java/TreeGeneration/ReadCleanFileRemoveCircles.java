@@ -34,7 +34,7 @@ public class ReadCleanFileRemoveCircles
 	{
 		try {
 			
-			File folder = new File(Global.path_Local+File.separator+"ResultFilesBasedOnLevel");
+			File folder = new File(Global.pathLocal+File.separator+"ResultFilesBasedOnLevel");
 			File[] listOfFiles = folder.listFiles();
 			HashSet<String> hset_allConnections = new HashSet<>();
 			LinkedList<String> llist_results = new LinkedList<>();
@@ -74,7 +74,7 @@ public class ReadCleanFileRemoveCircles
 		Map<String,HashMap<String, Double> > hashMap_result = new LinkedHashMap<>();
 		
 		try {
-			BufferedReader br_Entity = new BufferedReader(new FileReader(Global.path_Local+"EntityList.txt"));
+			BufferedReader br_Entity = new BufferedReader(new FileReader(Global.pathLocal+"EntityList.txt"));
 			String str_entity ;
 			int count =0;
 			while ((str_entity = br_Entity.readLine()) != null)
@@ -82,7 +82,7 @@ public class ReadCleanFileRemoveCircles
 				count++;
 				String str_entityName=str_entity.toLowerCase();
 				
-				BufferedReader br_MainFile = new BufferedReader(new FileReader(Global.path_Local+str_resultFile));
+				BufferedReader br_MainFile = new BufferedReader(new FileReader(Global.pathLocal+str_resultFile));
 				String line ;
 				while ((line = br_MainFile.readLine()) != null)
 				{
@@ -138,7 +138,7 @@ public class ReadCleanFileRemoveCircles
 		BufferedWriter bw = null;
 		FileWriter fw = null;
 		try {
-			fw = new FileWriter(Global.path_Local+File.separator+str_fileName,false);
+			fw = new FileWriter(Global.pathLocal+File.separator+str_fileName,false);
 			bw = new BufferedWriter(fw);
 			
 			for (String str_: results) 

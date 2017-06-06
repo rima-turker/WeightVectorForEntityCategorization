@@ -53,7 +53,7 @@ public class ReadFile_DoubleCheck
 			}
 			
 			String line=null;
-			BufferedReader br_MainFile = new BufferedReader(new FileReader(Global.path_Local+File.separator+"Results_fromFilesCleaned"));
+			BufferedReader br_MainFile = new BufferedReader(new FileReader(Global.pathLocal+File.separator+"Results_fromFilesCleaned"));
 			ArrayList<String> arrList_mainFile = WriteReadFromFile.readFileToList("Results_fromFilesCleaned");
 			File Dir = new File(System.getProperty("user.dir")+File.separator+"ResultFilesBasedOnLevel");
 			
@@ -338,7 +338,7 @@ public class ReadFile_DoubleCheck
 			
 			if (isZip) 
 			{
-				ZipFile zf = new ZipFile(Global.path_Local+str_bigFile);
+				ZipFile zf = new ZipFile(Global.pathLocal+str_bigFile);
 				
 				Enumeration<? extends ZipEntry> entries = zf.entries();
 //				while (entries.hasMoreElements()) 
@@ -379,7 +379,7 @@ public class ReadFile_DoubleCheck
 			}
 			else
 			{
-				BufferedReader br_bigFile = new BufferedReader(new FileReader(Global.path_Local+str_bigFile));
+				BufferedReader br_bigFile = new BufferedReader(new FileReader(Global.pathLocal+str_bigFile));
 				String line = null;
 				while ((line = br_bigFile.readLine()) != null) 
 				{
@@ -407,7 +407,7 @@ public class ReadFile_DoubleCheck
 		HashSet<String> hset_results = new HashSet<>();
 		try 
 		{
-			BufferedReader br_FamEntities = new BufferedReader(new FileReader(Global.path_Local+str_fileName));
+			BufferedReader br_FamEntities = new BufferedReader(new FileReader(Global.pathLocal+str_fileName));
 			String line = null;
 			while ((line = br_FamEntities.readLine()) != null) 
 			{

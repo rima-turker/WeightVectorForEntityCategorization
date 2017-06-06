@@ -87,9 +87,9 @@ public class HeurisitcFunctions
 			String str_depth = str_entityNameAndDepth.substring(
 					str_entityNameAndDepth.indexOf(Global.str_depthSeparator) + Global.str_depthSeparator.length(), str_entityNameAndDepth.length());
 
-			Integer int_dept = Integer.parseInt(str_depth);
+			System.out.println(str_entityNameAndDepth+" " +str_entityName+" "+str_depth);
 			HashMap<String, Double> hmap_CatVal = entry_EntDeptCatVal.getValue();
-
+			int depth = Integer.parseInt(str_depth);
 			//	LinkedHashMap<String, Double> lhmap_Results = (LinkedHashMap<String, Double>) entry_EntDeptCatVal.getValue();
 
 			for (Entry<String, Double> entry_hmapValues : hmap_CatVal.entrySet()) 
@@ -162,7 +162,7 @@ public class HeurisitcFunctions
 		else
 		{
 			System.out.println(str_catName+Global.str_depthSeparator+str_depth);
-			System.err.println("ERROR");
+			System.out.println("ERROR");
 			return 0.;
 		}
 	}

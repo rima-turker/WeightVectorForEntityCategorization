@@ -304,8 +304,8 @@ public class EvaluateHeuristicFunctions<K> {
 		str_Rec += "\",\",\")";
 		str_Fsco += "\",\",\")";
 
-//		System.out.println(str_Pre.replace("=SPLIT(\" ,", "=SPLIT(\"Precision ,"));
-//		System.out.println(str_Rec.replace("=SPLIT(\" ,", "=SPLIT(\"Recall ,"));
+		System.out.println(str_Pre.replace("=SPLIT(\" ,", "=SPLIT(\"Precision ,"));
+		System.out.println(str_Rec.replace("=SPLIT(\" ,", "=SPLIT(\"Recall ,"));
 		System.out.println(str_Fsco.replace("=SPLIT(\" ,", "=SPLIT(\"Fmeasure ,"));
 		
 		return hmap_fmeasure;
@@ -325,7 +325,7 @@ public class EvaluateHeuristicFunctions<K> {
 	public Map<String, String> initializeGroundTruthAndList(String fileName) {
 		
 		Map<String, String> hmap_groundTruth = new LinkedHashMap<>();
-		try (BufferedReader br = new BufferedReader(new FileReader(Global.path_Local + fileName));) {
+		try (BufferedReader br = new BufferedReader(new FileReader(Global.pathLocal + fileName));) {
 
 			String str_entity = null, str_mainCat = null;
 			String line;
@@ -539,7 +539,7 @@ public class EvaluateHeuristicFunctions<K> {
 		BufferedReader brC;
 		ArrayList<Double> arrListTemp;
 		try {
-			brC = new BufferedReader(new FileReader(Global.path_Local + "SubCategory_Count.csv"));
+			brC = new BufferedReader(new FileReader(Global.pathLocal + "SubCategory_Count.csv"));
 			String lineCategory = null;
 
 			while ((lineCategory = brC.readLine()) != null) {
@@ -619,7 +619,7 @@ public class EvaluateHeuristicFunctions<K> {
 		String str_entityName = null;
 		String str_catName = null;
 		Integer int_count_ = 0;
-		try (BufferedReader br = new BufferedReader(new FileReader(Global.path_Local + fileName));) {
+		try (BufferedReader br = new BufferedReader(new FileReader(Global.pathLocal + fileName));) {
 			String line = null;
 			int depth = Global.levelOfTheTree;
 

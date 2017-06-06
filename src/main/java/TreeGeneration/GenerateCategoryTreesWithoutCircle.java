@@ -110,7 +110,7 @@ public class GenerateCategoryTreesWithoutCircle
 			
 			if (ComparisonFunctions.isZipFile(new File(System.getProperty("user.dir")+str_bigFile))) 
 			{
-				Enumeration<? extends ZipEntry> entries = new ZipFile(Global.path_Local+str_bigFile).entries();
+				Enumeration<? extends ZipEntry> entries = new ZipFile(Global.pathLocal+str_bigFile).entries();
  				while (entries.hasMoreElements()) 
 				{
 					ZipEntry ze = (ZipEntry) entries.nextElement();
@@ -120,7 +120,7 @@ public class GenerateCategoryTreesWithoutCircle
 					{
 						System.out.println("Reading "+ ze.getName()+"size:"+ze.getSize());
 
-						BufferedReader br_bigFile = new BufferedReader(new InputStreamReader(new ZipFile(Global.path_Local+str_bigFile).getInputStream(ze)));
+						BufferedReader br_bigFile = new BufferedReader(new InputStreamReader(new ZipFile(Global.pathLocal+str_bigFile).getInputStream(ze)));
 						String line = null;
 
 						bf_Writer.write(ze.getName());

@@ -301,7 +301,7 @@ public class ReadResultsFromFilteredFiles
 	public static void writeCategoryTreeToAFile(Map<String, HashSet <String>> hmap, String str_folderName) {
 
 
-		File folder =(new File(Global.path_Local+str_folderName));
+		File folder =(new File(Global.pathLocal+str_folderName));
 		folder.mkdir();
 
 		try {
@@ -309,7 +309,7 @@ public class ReadResultsFromFilteredFiles
 			for (Entry<String, HashSet <String>> entry: hmap.entrySet()) 
 			{
 				String str_entName = entry.getKey();
-				File file = new File(Global.path_Local+str_folderName+ str_entName);
+				File file = new File(Global.pathLocal+str_folderName+ str_entName);
 				file.createNewFile();
 				BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
 

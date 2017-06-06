@@ -26,7 +26,7 @@ public class WriteReadFromFile
 		ArrayList<String> arrList_result = new ArrayList<>();
 		String line=null;
 		try {
-			BufferedReader br_MainFile = new BufferedReader(new FileReader(Global.path_Local+File.separator+str_fileName));
+			BufferedReader br_MainFile = new BufferedReader(new FileReader(Global.pathLocal+File.separator+str_fileName));
 			while ((line = br_MainFile.readLine()) != null) 
 			{
 				line= line.toLowerCase();
@@ -43,7 +43,7 @@ public class WriteReadFromFile
 	public static Map<String, HashSet<String>> readEntitiesAndCats(String fileName) {
 		
 		Map<String, HashSet<String>> hmap_groundTruthlist = new LinkedHashMap<>();
-		try (BufferedReader br = new BufferedReader(new FileReader(Global.path_Local + fileName));) {
+		try (BufferedReader br = new BufferedReader(new FileReader(Global.pathLocal + fileName));) {
 
 			String str_entity = null;
 			String line;
@@ -77,7 +77,7 @@ public class WriteReadFromFile
 	}
 	public static void writeMapFormattedForExell(Map mp,String str_fileName) {
 
-		File file =(new File(Global.path_Local+str_fileName+".csv"));
+		File file =(new File(Global.pathLocal+str_fileName+".csv"));
 		try {
 			file.createNewFile();
 			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
@@ -97,7 +97,7 @@ public class WriteReadFromFile
 
 	public static void writeMapToAFile(Map mp,String str_fileName) {
 
-		File file =(new File(Global.path_Local+str_fileName));
+		File file =(new File(str_fileName));
 		try {
 			file.createNewFile();
 			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
@@ -118,7 +118,7 @@ public class WriteReadFromFile
 		Map<String, HashMap<String, Double>> hmap_result = new LinkedHashMap<>();
 		String line=null;
 		try {
-			BufferedReader br_MainFile = new BufferedReader(new FileReader(Global.path_Local+File.separator+str_fileName));
+			BufferedReader br_MainFile = new BufferedReader(new FileReader(str_fileName));
 			//BufferedReader br_MainFile = new BufferedReader(new FileReader(str_fileName));
 			while ((line = br_MainFile.readLine()) != null) 
 			{

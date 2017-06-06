@@ -10,7 +10,7 @@ apply plugin: 'eclipse'
 
 mainClassName="TreeGeneration.Main"
 
-applicationDefaultJvmArgs = ["-Xmx1g"]
+applicationDefaultJvmArgs = ["-Xmx45g"]
 
 repositories {
     jcenter()
@@ -46,17 +46,17 @@ task showPlatformVersion << {
     }
 }
 
-task deployToServer(dependsOn: installDist) << {
+task deploy(dependsOn: installDist) << {
     ssh.run {
         session(remotes.server) {
-         	execute 'rm -rf ./java/WikiPediaEntityDictionary'
-            put from: './build/install/WikiPediaEntityDictionary', into: './java/'
-            execute 'chmod +x ./java/WikiPediaEntityDictionary/bin/WikiPediaEntityDictionary'
-            execute 'cd ./java/WikiPediaEntityDictionary/bin && ./WikiPediaEntityDictionary 50 /home/farshad/java/data/'
-            get from: './java/WikiPediaEntityDictionary/bin/log', into: '.'
+        	execute 'rm -rf /home/rima/playground/CurrentlyWorking/WeightVectorGeneration'
+            put from: './build/install/WeightVectorForEntityCategorization', into: '/home/rima/playground/CurrentlyWorking'
+            execute 'chmod +x /home/rima/playground/CurrentlyWorking/WeightVectorForEntityCategorization/bin/WeightVectorForEntityCategorization'
+            execute 'cd /home/rima/playground/CurrentlyWorking/WeightVectorForEntityCategorization/bin && ./WeightVectorForEntityCategorization /home/rima/playground/CurrentlyWorking/WeightVectorEntities /home/rima/playground/CurrentlyWorking/pageLinks_DistinctPaths.csv'
         }
     }
 }
+
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'

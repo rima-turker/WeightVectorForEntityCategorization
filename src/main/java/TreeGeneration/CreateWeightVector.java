@@ -32,7 +32,8 @@ public class CreateWeightVector
 {
 	private double threshold;
 	private  Global.HeuristicType heuristic;
-	private String str_fileNameGroundTruthList;
+	private String strEntityList;
+	private String strFileDistinctPaths;
 	final private int int_topElementCount =1;
 
 	private static final Logger LOG = Logger.getLogger(EvaluateHeuristicFunctions.class.getCanonicalName());
@@ -42,25 +43,28 @@ public class CreateWeightVector
 	public static final Map<String, Double> hmap_fmeasureAll = new HashMap<>();
 	public static final Set<Double> hset_fmeasure = new HashSet<>();
 
-	public CreateWeightVector(final String str_fileNameGroundTruthList,
+	public CreateWeightVector(final String str_fileNameGroundTruthList,final String strFileDistinct,
 			final Double db_threshold, final Global.HeuristicType heu)
 	{
 		this.heuristic= heu;
-		this.str_fileNameGroundTruthList=str_fileNameGroundTruthList;
+		this.strEntityList=str_fileNameGroundTruthList;
+		this.strFileDistinctPaths=strFileDistinct;
 		this.threshold = db_threshold;
 		
 	}
-
-
 	public void main() throws Exception {
 		
+		System.out.println("Started..");
 		final Map<String, HashMap<String, Double>> hmap_weightVectorLinks = WriteReadFromFile
-				.readTestSet(Global.str_testFileName);
+				.readTestSet(strFileDistinctPaths);
 		
-		hmap_groundTruth = new LinkedHashMap<>(initializeGroundTruth(str_fileNameGroundTruthList));
-
-		
-		System.out.println("finished reading "+  Global.str_testFileName +"size" + hmap_weightVectorLinks.size());
+		System.out.println("finished reading "+  strFileDistinctPaths +"size" + hmap_weightVectorLinks.size());
+		//Print.printMap(hmap_weightVectorLinks);
+		//WriteReadFromFile.writeMapToAFile(hmap_weightVectorLinks, "/home/rima/playground/CurrentlyWorking/temp_paths");
+		hmap_groundTruth = new LinkedHashMap<>(initializeGroundTruth(strEntityList));
+		//Print.printMap(hmap_groundTruth);
+		//WriteReadFromFile.writeMapToAFile(hmap_groundTruth, "/home/rima/playground/CurrentlyWorking/temp_entities");
+		System.out.println("finished reading "+  strEntityList +"size" + hmap_groundTruth.size());
 		
 		final HeurisitcFunctions heurisitcFun = new HeurisitcFunctions(hmap_weightVectorLinks, getHeuristic(),
 				hmap_groundTruth.size());
@@ -251,7 +255,7 @@ public class CreateWeightVector
 		String str_entityName = null;
 		String str_catName = null;
 		Integer int_count_ = 0;
-		try (BufferedReader br = new BufferedReader(new FileReader(Global.path_Local + fileName));) {
+		try (BufferedReader br = new BufferedReader(new FileReader(Global.pathLocal + fileName));) {
 			String line = null;
 			int depth = Global.levelOfTheTree;
 
