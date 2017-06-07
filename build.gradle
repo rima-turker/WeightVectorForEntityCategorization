@@ -53,6 +53,9 @@ task deploy(dependsOn: installDist) << {
             put from: './build/install/WeightVectorForEntityCategorization', into: '/home/rima/playground/CurrentlyWorking'
             execute 'chmod +x /home/rima/playground/CurrentlyWorking/WeightVectorForEntityCategorization/bin/WeightVectorForEntityCategorization'
             execute 'cd /home/rima/playground/CurrentlyWorking/WeightVectorForEntityCategorization/bin && ./WeightVectorForEntityCategorization /home/rima/playground/CurrentlyWorking/WeightVectorEntities /home/rima/playground/CurrentlyWorking/pageLinks_DistinctPaths.csv'
+        	//execute 'cd /home/rima/playground/CurrentlyWorking/WeightVectorForEntityCategorization/bin && ./WeightVectorForEntityCategorization /home/rima/playground/CurrentlyWorking/heuristic_formated'
+        	//heuristic_formated
+        
         }
     }
 }

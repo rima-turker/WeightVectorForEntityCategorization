@@ -19,15 +19,19 @@ public class Main {
 		////get from: '/home/rima/playground/WV_Calc_EntityAndCategory/DumpFiles_CleanText/FilesCleaned_OnlyCategory/CategoryTreeGradle/bin/result', into: '.'
 		
 		System.out.println(args.length);
-		if (args.length == 2) 
+		if (args.length == 1) 
 		{
-			System.out.println("Arg size is 2");
+			System.out.println(args[0]);
+			new CreateWeightVector(args[0], 0.07, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
+		}
+		else if (args.length == 2) 
+		{
+			System.out.println("Arg size 2");
 			new CreateWeightVector(args[0],args[1], 0.07, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
 		}
 		else
 		{
-//			String str_entityList = Global.pathLocal+"WeightVectorEntities";
-//			new CreateWeightVector(str_entityList, 0.07, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
+			new CreateWeightVector(Global.pathLocal+"test_Entities",Global.pathLocal+"test_PageLinks", 0.07, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
 		}
 		
 		

@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.net.SyslogAppender;
 
 import util.MapUtil;
 import util.Normalization;
@@ -34,15 +35,18 @@ public class CreateWeightVector
 	private  Global.HeuristicType heuristic;
 	private String strEntityList;
 	private String strFileDistinctPaths;
+	
+	private String strFileName;
 	final private int int_topElementCount =1;
-
+	
 	private static final Logger LOG = Logger.getLogger(EvaluateHeuristicFunctions.class.getCanonicalName());
 
 	private Map<String, String> hmap_groundTruth;
 	private static final Map<String, HashSet<String>> hmap_groundTruthlist = new LinkedHashMap<>();
 	public static final Map<String, Double> hmap_fmeasureAll = new HashMap<>();
 	public static final Set<Double> hset_fmeasure = new HashSet<>();
-
+	
+	
 	public CreateWeightVector(final String str_fileNameGroundTruthList,final String strFileDistinct,
 			final Double db_threshold, final Global.HeuristicType heu)
 	{
@@ -52,42 +56,44 @@ public class CreateWeightVector
 		this.threshold = db_threshold;
 		
 	}
+	
+	public CreateWeightVector(final String str_fileName,
+			final Double db_threshold, final Global.HeuristicType heu)
+	{
+		this.heuristic= heu;
+		this.threshold = db_threshold;
+		this.strFileName= str_fileName;
+		
+	}
 	public void main() throws Exception {
 		
-		System.out.println("Started..");
 		final Map<String, HashMap<String, Double>> hmap_weightVectorLinks = WriteReadFromFile
 				.readTestSet(strFileDistinctPaths);
+		//WriteReadFromFile.writeMapToAFile(hmap_weightVectorLinks, "pageLinks");
 		
-		System.out.println("finished reading "+  strFileDistinctPaths +"size" + hmap_weightVectorLinks.size());
-		//Print.printMap(hmap_weightVectorLinks);
-		//WriteReadFromFile.writeMapToAFile(hmap_weightVectorLinks, "/home/rima/playground/CurrentlyWorking/temp_paths");
 		hmap_groundTruth = new LinkedHashMap<>(initializeGroundTruth(strEntityList));
-		//Print.printMap(hmap_groundTruth);
-		//WriteReadFromFile.writeMapToAFile(hmap_groundTruth, "/home/rima/playground/CurrentlyWorking/temp_entities");
-		System.out.println("finished reading "+  strEntityList +"size" + hmap_groundTruth.size());
+		//WriteReadFromFile.writeMapToAFile(hmap_groundTruth, "hmap_groundTruth");
 		
 		final HeurisitcFunctions heurisitcFun = new HeurisitcFunctions(hmap_weightVectorLinks, getHeuristic(),
 				hmap_groundTruth.size());
 		
-		
-		final Map<String, HashMap<String, Double>> hmap_heuResult = new LinkedHashMap<>(heurisitcFun.callHeuristic());
-		
-		System.out.println("finished "+  heurisitcFun.callHeuristic() +"size" + hmap_heuResult.size());
+		final Map<String, HashMap<String, Double>> hmap_heuResult = new HashMap<>(heurisitcFun.callHeuristic());
+		//WriteReadFromFile.writeMapToAFile(hmap_heuResult, "Heuristic_Function_Result");
 		
 		final Map<String, HashMap<String, Double>> hmap_addCatValuesTillDepth = aggregateCategoryValues(
 				hmap_heuResult);
 		
-		System.out.println("finished aggregateCategoryValues "+  "size" + hmap_addCatValuesTillDepth.size());
-		
+		System.out.println("finished aggregateCategoryValues "+  " size" + hmap_addCatValuesTillDepth.size());
+//		
 		final Map<String, HashMap<String, Double>> hmap_normalizedDepthBased = Normalization
 				.normalize_LevelBased(hmap_addCatValuesTillDepth);
 		
 		final Map<String, HashMap<String, Double>> hmap_filteredResults = filterHeuResults(
 				hmap_normalizedDepthBased, getThreshold());
-		System.out.println("finished filtering "+  "size" + hmap_filteredResults.size());
+		System.out.println("finished filtering "+  " size" + hmap_filteredResults.size());
 		
 		WriteReadFromFile.writeMapToAFile(hmap_filteredResults, "MapFormatedWeightVector_7");
-		
+//		
 		System.out.println("Finished");
 
 	}
@@ -124,13 +130,21 @@ public class CreateWeightVector
 	
 	public Map<String, HashMap<String, Double>> aggregateCategoryValues(
 			Map<String, HashMap<String, Double>> hmap_heuResult) {
+		
+		System.out.println("started aggregateCategoryValues()");
+		
 		final Map<String, LinkedHashMap<String, Double>> hmap_result = new LinkedHashMap<>();
+		
 		for (Entry<String, HashMap<String, Double>> entry : hmap_heuResult.entrySet()) {
 			final String str_entityNameAndDepth = entry.getKey();
 
-			final String str_depth = str_entityNameAndDepth.substring(
+			String str_depth = str_entityNameAndDepth.substring(
 					str_entityNameAndDepth.indexOf(Global.str_depthSeparator) + Global.str_depthSeparator.length(),
 					str_entityNameAndDepth.length());
+			if (str_depth.contains("_"))
+			{
+				str_depth = str_depth.replace("_", "");
+			}
 			final String str_entityName = str_entityNameAndDepth.substring(0,
 					str_entityNameAndDepth.indexOf(Global.str_depthSeparator));
 
@@ -141,11 +155,23 @@ public class CreateWeightVector
 				String str_cat = entry_cat.getKey();
 				Double db_catVal = entry_cat.getValue();
 				for (Integer i = 1; i < Integer.parseInt(str_depth); i++) {
-					Map<String, Double> lhmap_temp = new LinkedHashMap<>(
-							hmap_heuResult.get(str_entityName + Global.str_depthSeparator + i.toString()));
-					if (lhmap_temp.containsKey(str_cat)) {
-						db_catVal += lhmap_temp.get(str_cat);
+					//System.out.println(str_entityName + Global.str_depthSeparator + i.toString());
+					
+					/*
+					 * CHECK!!!!!!!!!!!!!!!!
+					 * 
+					 */
+					if (hmap_heuResult.containsKey(str_entityName + Global.str_depthSeparator + i.toString())) 
+					{
+						Map<String, Double> lhmap_temp = new LinkedHashMap<>(
+								hmap_heuResult.get(str_entityName + Global.str_depthSeparator + i.toString()));
+						if (lhmap_temp.containsKey(str_cat)) {
+							db_catVal += lhmap_temp.get(str_cat);
+						}
 					}
+					
+					
+					
 				}
 				lhmap_resultcatAnVal.put(str_cat, db_catVal);
 			}
@@ -216,12 +242,12 @@ public class CreateWeightVector
 		Map<String, String> hmap_groundTruth = new LinkedHashMap<>();
 		try (BufferedReader br = new BufferedReader(new FileReader(fileName));) {
 
-			String str_entity = null, str_mainCat = null;
 			String line;
 			while ((line = br.readLine()) != null) {
 				line = line.toLowerCase();
+				
 				if (line != null) {
-					hmap_groundTruth.put(str_entity, "");
+					hmap_groundTruth.put(line, "");
 				}
 			}
 		}

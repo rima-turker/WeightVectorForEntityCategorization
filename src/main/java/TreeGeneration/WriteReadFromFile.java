@@ -103,6 +103,7 @@ public class WriteReadFromFile
 			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
 			Iterator it = mp.entrySet().iterator();
 			while (it.hasNext()) {
+				
 				Map.Entry pair = (Map.Entry) it.next();
 				bufferedWriter.write(pair.getKey()+"="+pair.getValue());
 				bufferedWriter.newLine();
