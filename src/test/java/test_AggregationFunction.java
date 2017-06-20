@@ -16,7 +16,6 @@ public class test_AggregationFunction {
 		Map<String, HashMap<String, Double>> hmap_actual = new HashMap<String, HashMap<String, Double>>();
 		
 		HashMap<String, Double> hmap_temp = new HashMap<>();
-		
 		hmap_temp.put("politics", 4.0);
 		hmap_temp.put("psychology", 1.0);
 		hmap_temp.put("philosophy", 1.0);
@@ -47,8 +46,8 @@ public class test_AggregationFunction {
 		
 		
 //
-//		Map<String, HashMap<String, Double>> hmap_function = new HashMap<String, HashMap<String, Double>>(
-//				EvaluateHeuristicFunctions.aggregateCategoryValues(hmap_actual));
+		Map<String, HashMap<String, Double>> hmap_function = new HashMap<String, HashMap<String, Double>>(
+		EvaluateHeuristicFunctions.aggregateCategoryValues(hmap_actual));
 
 		Map<String, HashMap<String, Double>> hmap_expected = new HashMap<String, HashMap<String, Double>>();
 	
@@ -88,7 +87,7 @@ public class test_AggregationFunction {
 		hmap_temp = new HashMap<>();
 		hmap_actual.put("anne_claude_de_caylus__1", hmap_temp);
 		
-		//assertEquals(hmap_expected.get("anne_claude_de_caylus__7"), hmap_function.get("anne_claude_de_caylus__7"));
+		assertEquals(hmap_actual.get("anne_claude_de_caylus__7"), hmap_function.get("anne_claude_de_caylus__7"));
 	}
 
 }

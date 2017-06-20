@@ -22,7 +22,7 @@ public class test_Heuristic {
 	public void test() 
 	{
 		Map<String, HashMap<String, Double>> hmap_testSet = new HashMap<String, HashMap<String,Double>>();
-		hmap_testSet=WriteReadFromFile.readTestSet("test_TestSetDistinctpaths.csv");
+		hmap_testSet=WriteReadFromFile.readTestSet_coma(Global.pathLocal_test+"test_TestSetDistinctpaths.csv");
 		Print.printMap(hmap_testSet);
 		
 		int int_startingLevelForAnne = 4;

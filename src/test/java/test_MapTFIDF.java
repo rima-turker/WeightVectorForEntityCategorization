@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import org.junit.Test;
 import TreeGeneration.EvaluateHeuristicFunctions;
+import TreeGeneration.Global;
 import TreeGeneration.HeurisitcFunctions;
 import TreeGeneration.WriteReadFromFile;
 
@@ -17,7 +18,7 @@ public class test_MapTFIDF {
 	public void test()
 	{
 		Map<String, HashMap<String, Double>> hmap_testSet = new HashMap<String, HashMap<String,Double>>();
-		hmap_testSet=WriteReadFromFile.readTestSet("test_TestSetDistinctpaths.csv");
+		hmap_testSet=WriteReadFromFile.readTestSet_coma(Global.pathLocal_test+"test_TestSetDistinctpaths.csv");
 		
 		Map<String, Integer> hmap_expected = new HashMap<String, Integer>();
 		hmap_expected.put("archaeology__7", 1);
