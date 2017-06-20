@@ -2,11 +2,13 @@ package TreeGeneration;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public class Print 
 {
@@ -18,6 +20,13 @@ public class Print
 			{
 				System.out.println(entry.getKey()+"="+mp.get(entry.getKey()));
 			}
+		}
+	}
+	public static <K> void printSet(Set<K> set) 
+	{
+		for (K str : set) 
+		{
+			System.out.println(str);
 		}
 	}
 	public static void printMap(Map mp) {
@@ -53,6 +62,20 @@ public class Print
 			{
 				System.err.println("-------------"+entry.toString());
 			}
+		}
+	}
+	public static void printMapOnlyEntities(Map<String, HashMap<String, Double>> mp) {
+		
+		HashSet<String> setEntities = new HashSet<>();
+		for (Entry<String, HashMap<String, Double>> entry : mp.entrySet()) 
+		{
+			
+			setEntities.add(entry.getKey().substring(0,entry.getKey().indexOf(Global.str_depthSeparator)));
+		}
+		for (String str: setEntities) {
+			System.out.println(str);
+			
+			
 		}
 	}
 	public static void printMapOnlyCats(Map<String, HashMap<String, Double>> mp) {

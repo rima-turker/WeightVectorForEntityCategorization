@@ -30,7 +30,7 @@ public class GenerateCategoryTrees {
 
 		//File log = new File(categoryName+"L"+Integer.parseInt(number)+1);
 		
-		String pathMainCategories = Global.path_MainCategories;
+		String pathMainCategories = Global.strPathMainCat;
 		
 		br_MainCategory = new BufferedReader(new FileReader(pathMainCategories));
 		String line_mainCategory = null;

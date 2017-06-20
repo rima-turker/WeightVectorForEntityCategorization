@@ -19,20 +19,25 @@ public class ReadResultsFromFilteredFiles
 {
 	private HashSet<String> hset_allCats;
 
-	public ReadResultsFromFilteredFiles()
+	private String folderCategory;
+	private String pathMainCatFile;
+	public ReadResultsFromFilteredFiles(String pathCatFolder, String pathMainCatFile)
 	{
 		hset_allCats = new HashSet<>();
-		
+		folderCategory=pathCatFolder;
+		this.pathMainCatFile=pathMainCatFile;
 	}
 	public  HashMap<String, HashSet<String>> createCategoryMap() 
 	{
-		final File categoryFolder = new File(Global.str_CatFolder);
+		
+		System.out.println("Reading Categories");
+		final File categoryFolder = new File(folderCategory);
 
 		HashMap<String, HashSet<String>> hmap_categoryMap = new HashMap<>();
 
 		try {
 
-			BufferedReader br_MainCategory = new BufferedReader(new FileReader(Global.path_MainCategories));
+			BufferedReader br_MainCategory = new BufferedReader(new FileReader(this.pathMainCatFile));
 			String line_mainCategory = null;
 			while ((line_mainCategory = br_MainCategory.readLine()) != null) 
 			{
@@ -41,13 +46,13 @@ public class ReadResultsFromFilteredFiles
 
 				for(int i=1 ; i<=Global.levelOfTheTree; i++)
 				{
-					String str_fileName = categoryFolder.getName()+line_mainCategory.replace(">", "").toLowerCase()+Global.str_depthSeparator
+					String str_fileName = line_mainCategory.replace(">", "").toLowerCase()+"__"
 							+i;
 					
 					//for UTF-8 encodedfiles
 //					String str_fileName = line_mainCategory.replace(">", "").toLowerCase()+Global.str_depthSeparator
 //							+i;
-					final String file = categoryFolder.getName()+File.separator+str_fileName;	
+					final String file = folderCategory+File.separator+str_fileName;	
 
 					BufferedReader br = new BufferedReader(new FileReader(file));
 					String sCurrentLine;
@@ -64,7 +69,7 @@ public class ReadResultsFromFilteredFiles
 
 				}
 			}
-			System.out.println(getHset_allCats().size());
+			System.out.println("Size of the all categories "+getHset_allCats().size());
 			br_MainCategory.close();
 
 		}
@@ -89,7 +94,7 @@ public class ReadResultsFromFilteredFiles
 			while ((line_mainCategory = br_MainFile.readLine()) != null) 
 			{
 				String str_entName= line_mainCategory.split(" ")[0].toLowerCase();
-				String str_entCat= line_mainCategory.split(" ")[1].toLowerCase();
+				String str_entCat= line_mainCategory.split(" ")[1].toLowerCase().replace(">", "");
 				Map<Integer,String> hmap_mainCat= getCategoryName(str_entCat, hmap_categoryMap);
 				
 				if (hmap_mainCat.isEmpty()) 
@@ -159,11 +164,13 @@ public class ReadResultsFromFilteredFiles
 			{
 				//count++;
 				String str_entName= line_mainCategory.split(" ")[0].toLowerCase();
-				String str_entCat= line_mainCategory.split(" ")[1].toLowerCase();
+				String str_entCat= line_mainCategory.split(" ")[1].toLowerCase().replace(">", "");
 				Map<Integer,String> hmap_mainCat= getCategoryName(str_entCat, hmap_categoryMap);
-				if (hmap_mainCat.isEmpty()) {
+				
+				if (hmap_mainCat.isEmpty()) 
+				{
 					
-					System.err.println("Main category could not found.");
+					System.err.println("Main category could not found "+str_entCat);
 					
 				}
 				
@@ -238,9 +245,11 @@ public class ReadResultsFromFilteredFiles
 		{
 			String line = null;
 			//carl_hagenbeck={3={zoology=2, history=1}, 4={biology=1}, 5={biology=2, philosophy=1, arts=2, zoology=1}, 6={botany=2, archaeology=1, biology=2}, 7={archaeology=4, history=1, physics=1}}
+			//007_racing>={4={electronic_games=7}, 5={transport=1, arts=1, electronic_games=2}, 6={literature=1, communication=4, arts=1}, 7={psychology=1, communication=1, philosophy=1, arts=6, physics=1}}
+			
 			while ((line = br.readLine()) != null) 
 			{
-				line = line.toLowerCase().replace(" ", "");
+				line = line.toLowerCase().replace(" ", "").replace(">", "");
 				//System.out.println(line);
 				String str_entName = line.substring(0,line.indexOf("="));
 				String str_DepthCats = line.substring(line.indexOf("={")+("={").length(),line.length()).replace(" ", "");

@@ -31,125 +31,106 @@ import util.Normalization;
 import util.PrecisionAndRecallCalculator;
 import util.Statistics;
 
-public class EvaluateHeuristicFunctions<K> {
+public class EvaluateHeuristicFunctions {
 
-	private static String str_depthSeparator = "__";
 	private double threshold;
 	private  Global.HeuristicType heuristic;
 	private String str_fileNameGroundTruthList;
 	final private int int_topElementCount =1;
-	
+	private String strTestFileName;
 	private static final Logger LOG = Logger.getLogger(EvaluateHeuristicFunctions.class.getCanonicalName());
 
 	private final Map<String, ArrayList<Double>> hmap_subCategoryCount = new HashMap<>();
-	private Map<String, String> hmap_groundTruth;
-	private static final Map<String, HashSet<String>> hmap_groundTruthlist = new LinkedHashMap<>();
+	//private Map<String, String> hmap_groundTruth;
+	private Map<String, HashSet<String>> hmap_groundTruthlist ;
+	
 	public static final Map<String, Double> hmap_fmeasureAll = new HashMap<>();
 	public static final Set<Double> hset_fmeasure = new HashSet<>();
 	
-	public EvaluateHeuristicFunctions(final String str_fileNameGroundTruthList,
+	private Map<String, HashMap<String, Double>> hmap_filteredResults;
+	private Map<String, HashMap<String, Double>> hmap_testSetDistinctPaths;
+	
+	public EvaluateHeuristicFunctions()
+	{
+		
+		
+	}
+
+	public EvaluateHeuristicFunctions(final String str_fileNameGroundTruthList,String strTestFileName,
 			final Double db_threshold, final Global.HeuristicType heu)
 	{
 		this.heuristic= heu;
 		this.str_fileNameGroundTruthList=str_fileNameGroundTruthList;
 		this.threshold = db_threshold;
-	}
-
-
-	public void main() throws Exception {
-		hmap_groundTruth = new LinkedHashMap<>(initializeGroundTruthAndList(str_fileNameGroundTruthList));
-		final Map<String, HashMap<String, Double>> hmap_testSetDistinctPaths = WriteReadFromFile
-				.readTestSet(Global.str_testFileName);
-		final HeurisitcFunctions heurisitcFun = new HeurisitcFunctions(hmap_testSetDistinctPaths, getHeuristic(),
-				hmap_groundTruth.size());
-		final Map<String, HashMap<String, Double>> hmap_heuResult = new LinkedHashMap<>(heurisitcFun.callHeuristic());
-		final Map<String, HashMap<String, Double>> hmap_addCatValuesTillDepth = aggregateCategoryValues(
-				hmap_heuResult);
-		final Map<String, HashMap<String, Double>> hmap_normalizedDepthBased = Normalization
-				.normalize_LevelBased(hmap_addCatValuesTillDepth);
-
-		final Map<String, HashMap<String, Double>> hmap_filteredResults = filterHeuResults(
-				hmap_normalizedDepthBased, getThreshold());
+		this.strTestFileName= strTestFileName;
+		this.hmap_groundTruthlist = new LinkedHashMap<>(initializeGroundTruthList(this.str_fileNameGroundTruthList));
 		
-		
-		calculatePreRcallFscore_levelBased(hmap_filteredResults,hmap_groundTruthlist);
-		
-			
-	}
-	private void findstatisticOfData (Map<String, HashMap<String, Double>> hmap_addCatValuesTillDepth)
-	{
-		ArrayList<Double> arrList_data = new ArrayList<>();
-		//Print.printMapOnlyLevel(hmap_filteredResults, Integer.toString(GlobalVariables.levelOfTheTree));
-		//findTopElements(hmap_filteredResults, getInt_topElementCount());
-		for (Entry<String, HashMap<String, Double>> entry : hmap_addCatValuesTillDepth.entrySet()) {
-
-			final String str_depth = entry.getKey().substring(
-					entry.getKey().indexOf(str_depthSeparator) + str_depthSeparator.length(),
-					entry.getKey().length());
-			if (str_depth.equals("7")) 
-			{
-				final Map<String, Double> lhmap_catAnVal = new HashMap<>(entry.getValue());
-				for (final Entry<String, Double> entry_cat : lhmap_catAnVal.entrySet())
-				{
-					Double db_catVal = entry_cat.getValue();
-					arrList_data.add(db_catVal);
-				}
-			}
-			
-		}
-		
-		 System.out.println("max value of the list"+Collections.max(arrList_data));
-		 Double[] d = arrList_data.toArray(new Double[arrList_data.size()]);
-		 Statistics stat = new Statistics(d);
-		 System.out.println("Mean"+ stat.getMean());
-		 System.out.println("Standard"+ stat.getStdDev());
-		 
-	
 	}
 	
-	private void compareTopElementWithGroundTruth()
-	{
-		Map<String, HashSet<String>> hmap_topSet = new LinkedHashMap<>(WriteReadFromFile.readEntitiesAndCats(Global.str_top1FileName));
-		//Print.printMap(hmap_topSet);
-		int counter =0;
-		for(Entry<String, HashSet<String>>  entry : hmap_topSet.entrySet() )
-		{
-			String str_goal = hmap_groundTruth.get(entry.getKey());
-			HashSet<String> hset_top = new HashSet<>(entry.getValue());
+
+	/**
+	 * 
+	 */
+	public void main()  {
+		
+		try {
+			//hmap_groundTruth = new LinkedHashMap<>(initializeGroundTruthAndList(str_fileNameGroundTruthList));
+			hmap_testSetDistinctPaths = WriteReadFromFile
+					.readTestSet_tab(strTestFileName);
+////			
+//			final Map<String, HashMap<String, Double>> hmap_Testsecond = WriteReadFromFile
+//					.readTestSet_coma(Global.pathTestFile_coma);
+//			
+//			ComparisonFunctions.compareMaps(hmap_testSetDistinctPaths, hmap_Testsecond);
 			
-			if (hset_top.contains(str_goal)) 
-			{
-				System.out.println(entry.getKey()+" "+ hset_top.toString()+ "-"+ str_goal );
-				counter++;
-			}
+//			final Map<String, HashSet<String>> mapMeIncluded = WriteReadFromFile
+//					.readFileToMap(Global.goalSetFileMe);
+//			ComparisonFunctions.compareMaps_(hmap_groundTruthlist, mapMeIncluded);
+
+//			
+			HeurisitcFunctions heurisitcFun = new HeurisitcFunctions(hmap_testSetDistinctPaths, getHeuristic(),
+					hmap_testSetDistinctPaths.size()/Global.levelOfTheTree);
+			final Map<String, HashMap<String, Double>> hmap_heuResult = new LinkedHashMap<>(heurisitcFun.callHeuristic());
+			
+			final Map<String, HashMap<String, Double>> hmap_addCatValuesTillDepth = aggregateCategoryValues(
+					hmap_heuResult);
+			
+			final Map<String, HashMap<String, Double>> hmap_normalizedDepthBased = Normalization
+					.normalize_LevelBased(hmap_addCatValuesTillDepth);
+
+			this.hmap_filteredResults = new HashMap<>(filterHeuResults(hmap_normalizedDepthBased, getThreshold()));
+			
+			
+			//calculatePreRcallFscore_levelBased(hmap_filteredResults,hmap_groundTruthlist);
+			calculatePreRcallFscore_levelBased(hmap_filteredResults,getHmap_groundTruthlist());
+			
+		} 
+		
+		catch (Exception e)
+		{
+			// TODO: handle exception
 		}
-		System.out.println("Total entity found"+counter);
 	}
 
-	private void findTopElements(Map<String, HashMap<String, Double>> hmap_filteredResults, int int_topN )
-	{
-		for (Entry<String, HashMap<String, Double>> entry : hmap_filteredResults.entrySet()) 
-		{
-			if (entry.getKey().contains(Integer.toString(Global.levelOfTheTree))) 
-			{
-				HashMap<String, Double> hmap_catAndVal = new HashMap<>(entry.getValue());
-				System.out.print(entry.getKey().substring(0,
-						entry.getKey().indexOf(str_depthSeparator))+",");
-				MapUtil.printTopElementsMap(hmap_catAndVal, int_topN);
-			}
-		}
-	}
-	public Map<String, HashMap<String, Double>> aggregateCategoryValues(
+	public static Map<String, HashMap<String, Double>> aggregateCategoryValues(
 			Map<String, HashMap<String, Double>> hmap_heuResult) {
+		
 		final Map<String, LinkedHashMap<String, Double>> hmap_result = new LinkedHashMap<>();
+		/*
+		 * 	First we aggregate the paths such as 
+		 *  anne_claude_de_caylus__4 = {archaeology=1.0}
+			anne_claude_de_caylus__3 = {history=1.0}
+			anne_claude_de_caylus__5 = {politics=1.0, archaeology=1.0, history=1.0}
+			-*----------------------------------
+			anne_claude_de_caylus__4 = {archaeology=1.0}
+			anne_claude_de_caylus__3 = {history=1.0}
+			anne_claude_de_caylus__5 = {politics=1.0, archaeology=2.0, history=2.0}
+		 */
 		for (Entry<String, HashMap<String, Double>> entry : hmap_heuResult.entrySet()) {
-			final String str_entityNameAndDepth = entry.getKey();
-
-			final String str_depth = str_entityNameAndDepth.substring(
-					str_entityNameAndDepth.indexOf(str_depthSeparator) + str_depthSeparator.length(),
-					str_entityNameAndDepth.length());
-			final String str_entityName = str_entityNameAndDepth.substring(0,
-					str_entityNameAndDepth.indexOf(str_depthSeparator));
+			
+			String str_entityNameAndDepth = entry.getKey();
+			String str_entityName=str_entityNameAndDepth.split("\t")[0];
+			String str_depth =str_entityNameAndDepth.split("\t")[1];
 
 			final Map<String, Double> lhmap_catAnVal = new HashMap<>(entry.getValue());
 			final LinkedHashMap<String, Double> lhmap_resultcatAnVal = new LinkedHashMap<>(entry.getValue());
@@ -170,24 +151,28 @@ public class EvaluateHeuristicFunctions<K> {
 			hmap_result.put(str_entityNameAndDepth, lhmap_resultcatAnVal);
 		}
 		//Print.printMap(hmap_result);
-		Map<String, LinkedHashMap<String, Double>> hmap_resultAddCat = new LinkedHashMap<>();
+		
+		Map<String, HashMap<String, Double>> hmap_resultAddCat = new LinkedHashMap<>();
 		Map<String, HashMap<String, Double>> hmap_resultAddCat_sort = new LinkedHashMap<>();
-
-		for (Entry<String, String> entry : hmap_groundTruth.entrySet()) {
-			String str_entity = entry.getKey();
-
+		
+//		for (Entry<String, String> entry : hmap_groundTruth.entrySet()) {
+//			String str_entity = entry.getKey();
+		
+		for (String str:MapUtil.getKeySetFromMap(hmap_heuResult)) {
+			 String str_entity = str;
+		
 			for (int i = 0; i < Global.levelOfTheTree; i++) {
 				LinkedHashMap<String, Double> ll_currCatAndVal = hmap_result
-						.get(str_entity + str_depthSeparator + String.valueOf(i));
+						.get(str_entity + Global.str_depthSeparator + String.valueOf(i));
 
 				final int int_indexNext = i + 1;
 
 				if (i == 0) {
-					hmap_resultAddCat.put(str_entity + str_depthSeparator + String.valueOf(int_indexNext),
-							hmap_result.get(str_entity + str_depthSeparator + String.valueOf(int_indexNext)));
+					hmap_resultAddCat.put(str_entity + Global.str_depthSeparator + String.valueOf(int_indexNext),
+							hmap_result.get(str_entity + Global.str_depthSeparator + String.valueOf(int_indexNext)));
 				} else {
 					LinkedHashMap<String, Double> ll_nextCatAndVal = hmap_result
-							.get(str_entity + str_depthSeparator + String.valueOf(int_indexNext));
+							.get(str_entity + Global.str_depthSeparator + String.valueOf(int_indexNext));
 					// if (ll_currCatAndVal.isEmpty())
 					// {
 					// hmap_resultAddCat.put(str_entity + str_depthSeparator +
@@ -205,19 +190,28 @@ public class EvaluateHeuristicFunctions<K> {
 						}
 					}
 
-					hmap_resultAddCat.put(str_entity + str_depthSeparator + String.valueOf(int_indexNext),
+					hmap_resultAddCat.put(str_entity + Global.str_depthSeparator + String.valueOf(int_indexNext),
 							ll_nextCatAndVal);
 				}
 			}
 		}
-		for (Entry<String, String> entry : hmap_groundTruth.entrySet()) {
-			String str_entity = entry.getKey();
-			for (Integer i = Global.levelOfTheTree; i >= 1; i--) {
-				hmap_resultAddCat_sort.put(str_entity + str_depthSeparator + i.toString(),
-						hmap_resultAddCat.get(str_entity + str_depthSeparator + i.toString()));
-			}
-		}
-		return hmap_resultAddCat_sort;
+		return hmap_resultAddCat;
+		//Print.printMap(hmap_resultAddCat);
+		
+		/*
+		 * Only for sorting
+		 */
+//		for (String str:MapUtil.getKeySetFromMap(hmap_heuResult)) {
+//			 String str_entity = str;
+//			for (Integer i = Global.levelOfTheTree; i >= 1; i--) {
+//				hmap_resultAddCat_sort.put(str_entity + str_depthSeparator + i.toString(),
+//						hmap_resultAddCat.get(str_entity + str_depthSeparator + i.toString()));
+//			}
+//		}
+//		
+//		System.out.println("-*----------------------------------");
+//		Print.printMap(hmap_resultAddCat_sort);
+//		return hmap_resultAddCat_sort;
 	}
 
 	public Map<String, Double> calculatePreRcallFscore_levelBased(
@@ -229,23 +223,30 @@ public class EvaluateHeuristicFunctions<K> {
 		for (Entry<String, HashMap<String, Double>> entry : hmap_filteredEntDepthBased.entrySet()) {
 			String str_entityNameAndDepth = entry.getKey();
 			String str_depth = str_entityNameAndDepth.substring(
-					str_entityNameAndDepth.indexOf(str_depthSeparator) + str_depthSeparator.length(),
+					str_entityNameAndDepth.indexOf(Global.str_depthSeparator) + Global.str_depthSeparator.length(),
 					str_entityNameAndDepth.length());
 			String str_entityName = str_entityNameAndDepth.substring(0,
-					str_entityNameAndDepth.indexOf(str_depthSeparator));
-
-			HashSet<String> hset_temp = new HashSet<>();
-			HashMap<String, Double> hmap_temp = entry.getValue();
-			for (Entry<String, Double> entry_CatAndVal : hmap_temp.entrySet()) {
-				hset_temp.add(entry_CatAndVal.getKey());
+					str_entityNameAndDepth.indexOf(Global.str_depthSeparator));
+			
+			//System.out.print(str_entityName+"\t"+str_depth);
+			
+			if (hmap_groundTruthlist.containsKey(str_entityName))
+			{
+				HashSet<String> hset_temp = new HashSet<>();
+				HashMap<String, Double> hmap_temp = entry.getValue();
+				for (Entry<String, Double> entry_CatAndVal : hmap_temp.entrySet()) {
+					hset_temp.add(entry_CatAndVal.getKey());
+				}
+				HashSet<String> hset_goal = new HashSet<>(hmap_groundTruthlist.get(str_entityName));
+				hmap_precisionRecall.put(entry.getKey(),PrecisionAndRecallCalculator.calculatePrecisionRecall
+						(hset_goal, entry.getValue().keySet()));
 			}
-			HashSet<String> hset_goal = new HashSet<>(hmap_groundTruthlist.get(str_entityName));
-			
-			hmap_precisionRecall.put(entry.getKey(),PrecisionAndRecallCalculator.calculatePrecisionRecall
-					(hset_goal, entry.getValue().keySet()));
-			
-			//hmap_precisionRecall.put(entry.getKey(), calculatePrecisionRecall(str_entityName, str_depth, hset_temp));
-
+			else
+			{
+				
+				System.err.println("--------------------------"+str_entityNameAndDepth+" not in the ground truth"+"--------------------------");
+				break;
+			}
 		}
 	
 		String str_Pre = "=SPLIT(\"";
@@ -263,7 +264,7 @@ public class EvaluateHeuristicFunctions<K> {
 				String str_entityNameAndDepth = entry.getKey();
 
 				if (Integer.parseInt(str_entityNameAndDepth.substring(
-						str_entityNameAndDepth.indexOf(str_depthSeparator) + str_depthSeparator.length(),
+						str_entityNameAndDepth.indexOf(Global.str_depthSeparator) + Global.str_depthSeparator.length(),
 						str_entityNameAndDepth.length())) == int_depth) {
 					int_NumberOfEntities++;
 					HashMap<String, Double> hmap_preRcalFsco = entry.getValue();
@@ -278,7 +279,7 @@ public class EvaluateHeuristicFunctions<K> {
 
 				}
 			}
-
+			
 			Locale.setDefault(Locale.US);
 			DecimalFormat df = new DecimalFormat("0.00000");
 
@@ -321,11 +322,50 @@ public class EvaluateHeuristicFunctions<K> {
 		return sum / size;
 	}
 
-	
-	public Map<String, String> initializeGroundTruthAndList(String fileName) {
+		public static Map<String, String> initializeGroundTruth(String fileName) {
 		
 		Map<String, String> hmap_groundTruth = new LinkedHashMap<>();
 		try (BufferedReader br = new BufferedReader(new FileReader(Global.pathLocal + fileName));) {
+
+			String str_entity = null, str_mainCat = null;
+			String line;
+			while ((line = br.readLine()) != null) {
+				line = line.toLowerCase();
+				if (line == null) {
+					// System.out.println("--------------------------------------");
+				}
+				HashSet<String> ll_goalSet = new HashSet<>();
+				String[] str_split = line.split("\t");
+				for (int i = 0; i < str_split.length; i++) {
+					str_entity = str_split[0];
+					str_mainCat = str_split[1];
+
+					if (i != 0) {
+						ll_goalSet.add(str_split[i]);
+					}
+				}
+
+				hmap_groundTruth.put(str_entity, str_mainCat);
+				if (hmap_groundTruth.size() > 100) {
+					// System.out.println("--------------------------------------");
+				}
+			}
+
+		} catch (IOException e) {
+
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+
+		}
+		return hmap_groundTruth;
+	}
+	
+	public static Map<String, HashSet<String>> initializeGroundTruthList(String fileName) {
+		
+		Map<String, String> hmap_groundTruth = new LinkedHashMap<>();
+		Map<String, HashSet<String>> hmap_groundTruthlist = new LinkedHashMap<>();
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(fileName));) {
 
 			String str_entity = null, str_mainCat = null;
 			String line;
@@ -364,7 +404,7 @@ public class EvaluateHeuristicFunctions<K> {
 			e.printStackTrace();
 
 		}
-		return hmap_groundTruth;
+		return hmap_groundTruthlist;
 	}
 
 	public static LinkedHashMap<String, HashMap<String, Double>> testSetAddResourcePaths(
@@ -376,7 +416,7 @@ public class EvaluateHeuristicFunctions<K> {
 		LinkedHashMap<String, HashMap<String, Double>> lhmap_testSetAdded = new LinkedHashMap<>();
 
 		for (Entry<String, HashMap<String, Double>> entry : hmap_testSet.entrySet()) {
-			String str_entityName = entry.getKey().substring(0, entry.getKey().indexOf(str_depthSeparator));
+			String str_entityName = entry.getKey().substring(0, entry.getKey().indexOf(Global.str_depthSeparator));
 			if (entry.getKey().contains("1") && hmap_pathsFromOthers.containsKey(str_entityName)) {
 
 				HashMap<String, Double> map_catAndVal = hmap_pathsFromOthers.get(str_entityName);
@@ -419,7 +459,7 @@ public class EvaluateHeuristicFunctions<K> {
 			// hmap_heuResultNormalizedSorted.entrySet()) {
 			String str_entityName = entry.getKey();
 			final String str_depth = entry.getKey().substring(
-					entry.getKey().indexOf(str_depthSeparator) + str_depthSeparator.length(),
+					entry.getKey().indexOf(Global.str_depthSeparator) + Global.str_depthSeparator.length(),
 					entry.getKey().length());
 			LinkedHashMap<String, Double> hmap_Values = (LinkedHashMap<String, Double>) entry.getValue();
 			LinkedHashMap<String, Double> hmap_catAndValFiletered = new LinkedHashMap<>();
@@ -444,78 +484,78 @@ public class EvaluateHeuristicFunctions<K> {
 		return hmap_resultNormalizedFiltered;
 	}
 
-	private void compareResultsWithGroundTruth(Map<String, LinkedHashMap<String, Double>> hmap_heuResult) {
-		int[] arr_FoundDepth = new int[Global.levelOfTheTree];
-		int count_Cat = 0;
-		int count_NotFoundCat = 0;
-
-		for (Entry<String, String> entry : hmap_groundTruth.entrySet()) {
-			String str_entity = entry.getKey();
-			String str_category = entry.getValue();
-
-			boolean changed = false;
-			for (int i = 0; i < 7; i++) {
-				Integer int_index = i + 1;
-				LinkedHashMap<String, Double> ll_result = hmap_heuResult
-						.get(str_entity + str_depthSeparator + int_index.toString());
-
-				if (ll_result == null) {
-					continue;
-				}
-				if (ll_result.size() > 0) {
-					// String str_resCat= ll_result.keySet().iterator().next();
-					///////////////////////////////////////////////////////
-					final Double maxNumber = ll_result.values().iterator().next();
-					final List<String> firstElements = ll_result.entrySet().stream()
-							.filter(p -> p.getValue() >= maxNumber).map(p -> p.getKey()).collect(Collectors.toList());
-					// System.err.println(str_entity+"\t"+int_index+"\t"+str_category
-					// +"\t"+firstElements+"\t"+firstElements.contains(str_category));
-					// System.out.println(str_entity+" "+firstElements);
-					if (firstElements.contains(str_category))
-					///////////////////////////////////////////////////////
-					// if (str_resCat.equals(str_category))
-					{
-						if (int_index == 7) {
-							// System.out.println(entry.getValue()+" "+
-							// entry.getKey());
-						}
-						// System.out.println(entry.getValue()+" "+
-						// entry.getKey());
-						changed = true;
-						// System.out.println(int_index+" "+str_entity+"
-						// "+str_category);
-						arr_FoundDepth[i] += 1;
-						// System.out.println(str_entity+" "+firstElements+" "+
-						// firstElements+" "+arr_FoundDepth[i]);
-						count_Cat++;
-						break;
-					}
-				}
-
-			}
-			if (!changed) {
-				// System.out.println("XXXXXXXXXXX "+str_entity);
-				count_NotFoundCat++;
-			}
-
-		}
-		// System.out.println("=SPLIT(\"" + formatResult[i] + "\",\",\")");
-		String str_formated = "=SPLIT(\"";
-		for (int i = arr_FoundDepth.length - 1; i >= 0; i--) {
-
-			str_formated = str_formated + " ," + arr_FoundDepth[i];
-			// System.out.println(str_formated);
-		}
-
-		str_formated += "\",\",\")";
-		System.out.println(str_formated.replace("SPLIT(\" ,", "str_formated=SPLIT(\""));
-		// System.out.println(str_formated.replace("=SPLIT(\" ,", "=SPLIT(\""));
-
-		// System.out.println("Entity Count: "+ hmap_groundTruth.size());
-		// System.out.println("Total Found Category Number: "+ count_Cat );
-		// System.out.println("Total NOT Found Category Number: "+
-		// count_NotFoundCat );
-	}
+//	private void compareResultsWithGroundTruth(Map<String, LinkedHashMap<String, Double>> hmap_heuResult) {
+//		int[] arr_FoundDepth = new int[Global.levelOfTheTree];
+//		int count_Cat = 0;
+//		int count_NotFoundCat = 0;
+//
+//		for (Entry<String, String> entry : hmap_groundTruth.entrySet()) {
+//			String str_entity = entry.getKey();
+//			String str_category = entry.getValue();
+//
+//			boolean changed = false;
+//			for (int i = 0; i < 7; i++) {
+//				Integer int_index = i + 1;
+//				LinkedHashMap<String, Double> ll_result = hmap_heuResult
+//						.get(str_entity + str_depthSeparator + int_index.toString());
+//
+//				if (ll_result == null) {
+//					continue;
+//				}
+//				if (ll_result.size() > 0) {
+//					// String str_resCat= ll_result.keySet().iterator().next();
+//					///////////////////////////////////////////////////////
+//					final Double maxNumber = ll_result.values().iterator().next();
+//					final List<String> firstElements = ll_result.entrySet().stream()
+//							.filter(p -> p.getValue() >= maxNumber).map(p -> p.getKey()).collect(Collectors.toList());
+//					// System.err.println(str_entity+"\t"+int_index+"\t"+str_category
+//					// +"\t"+firstElements+"\t"+firstElements.contains(str_category));
+//					// System.out.println(str_entity+" "+firstElements);
+//					if (firstElements.contains(str_category))
+//					///////////////////////////////////////////////////////
+//					// if (str_resCat.equals(str_category))
+//					{
+//						if (int_index == 7) {
+//							// System.out.println(entry.getValue()+" "+
+//							// entry.getKey());
+//						}
+//						// System.out.println(entry.getValue()+" "+
+//						// entry.getKey());
+//						changed = true;
+//						// System.out.println(int_index+" "+str_entity+"
+//						// "+str_category);
+//						arr_FoundDepth[i] += 1;
+//						// System.out.println(str_entity+" "+firstElements+" "+
+//						// firstElements+" "+arr_FoundDepth[i]);
+//						count_Cat++;
+//						break;
+//					}
+//				}
+//
+//			}
+//			if (!changed) {
+//				// System.out.println("XXXXXXXXXXX "+str_entity);
+//				count_NotFoundCat++;
+//			}
+//
+//		}
+//		// System.out.println("=SPLIT(\"" + formatResult[i] + "\",\",\")");
+//		String str_formated = "=SPLIT(\"";
+//		for (int i = arr_FoundDepth.length - 1; i >= 0; i--) {
+//
+//			str_formated = str_formated + " ," + arr_FoundDepth[i];
+//			// System.out.println(str_formated);
+//		}
+//
+//		str_formated += "\",\",\")";
+//		System.out.println(str_formated.replace("SPLIT(\" ,", "str_formated=SPLIT(\""));
+//		// System.out.println(str_formated.replace("=SPLIT(\" ,", "=SPLIT(\""));
+//
+//		// System.out.println("Entity Count: "+ hmap_groundTruth.size());
+//		// System.out.println("Total Found Category Number: "+ count_Cat );
+//		// System.out.println("Total NOT Found Category Number: "+
+//		// count_NotFoundCat );
+//	}
 
 	private LinkedHashMap<String, Double> sortByValue(Map<String, Double> unsortMap) {
 		List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(unsortMap.entrySet());
@@ -565,114 +605,99 @@ public class EvaluateHeuristicFunctions<K> {
 
 	}
 
-	public static void test_CompareTwoLists(Map<String, LinkedHashMap<String, Double>> hmap_1,
-			Map<String, LinkedHashMap<String, Double>> hmap_2) {
-		int int_count = 0;
-		for (Entry<String, LinkedHashMap<String, Double>> entry_1 : hmap_1.entrySet()) {
-			String str_entityName = entry_1.getKey();
-			LinkedHashMap<String, Double> lhmap_CatAndVal = entry_1.getValue();
 
-			if (!lhmap_CatAndVal.equals(hmap_2.get(str_entityName))) {
-				LOG.error("Two maps are not identical");
-				System.out.println("ERROR");
-			}
-			int_count++;
-		}
-		System.out.println("Entities are tested:" + int_count);
-	}
+//	public void testNormalization(Map<String, LinkedHashMap<String, Double>> hmap_resultNormalizedFiltered) {
+//		for (Entry<String, String> entry : hmap_groundTruth.entrySet()) {
+//			String str_entity = entry.getKey();
+//			LinkedHashMap<String, Double> lhmap_temp = new LinkedHashMap<>();
+//			HashSet<Double> hset_ValuesToNormalize = new HashSet<>();
+//			String str_entityNameAndDepth = entry.getKey();
+//
+//			LinkedList<Double> llist_test = new LinkedList<>();
+//			for (Integer i = 1; i <= Global.levelOfTheTree; i++) {
+//
+//				LinkedHashMap<String, Double> ll_result = hmap_resultNormalizedFiltered
+//						.get(str_entity + str_depthSeparator + i.toString());
+//
+//				if (hmap_resultNormalizedFiltered.get(str_entity + str_depthSeparator + i.toString()) != null) {
+//					for (Entry<String, Double> entry_CatAndValue : ll_result.entrySet()) {
+//						llist_test.add(entry_CatAndValue.getValue());
+//					}
+//				}
+//			}
+//			// LinkedList<Double> ll_de = new LinkedList<>();
+//			if (llist_test.size() > 0 && !Collections.max(llist_test).equals(1.)) {
+//				System.out.println(str_entity + "HATA");
+//			}
+//			// if (llist_test.size()==0) {
+//			//
+//			// System.out.println(str_entity);
+//			//
+//			// }
+//
+//		}
+//	}
 
-	public void testNormalization(Map<String, LinkedHashMap<String, Double>> hmap_resultNormalizedFiltered) {
-		for (Entry<String, String> entry : hmap_groundTruth.entrySet()) {
-			String str_entity = entry.getKey();
-			LinkedHashMap<String, Double> lhmap_temp = new LinkedHashMap<>();
-			HashSet<Double> hset_ValuesToNormalize = new HashSet<>();
-			String str_entityNameAndDepth = entry.getKey();
-
-			LinkedList<Double> llist_test = new LinkedList<>();
-			for (Integer i = 1; i <= Global.levelOfTheTree; i++) {
-
-				LinkedHashMap<String, Double> ll_result = hmap_resultNormalizedFiltered
-						.get(str_entity + str_depthSeparator + i.toString());
-
-				if (hmap_resultNormalizedFiltered.get(str_entity + str_depthSeparator + i.toString()) != null) {
-					for (Entry<String, Double> entry_CatAndValue : ll_result.entrySet()) {
-						llist_test.add(entry_CatAndValue.getValue());
-					}
-				}
-			}
-			// LinkedList<Double> ll_de = new LinkedList<>();
-			if (llist_test.size() > 0 && !Collections.max(llist_test).equals(1.)) {
-				System.out.println(str_entity + "HATA");
-			}
-			// if (llist_test.size()==0) {
-			//
-			// System.out.println(str_entity);
-			//
-			// }
-
-		}
-	}
-
-	public Map<String, HashMap<String, Double>> initializeTestSet(String fileName) {
-
-		Map<String, HashMap<String, Double>> hmap_testSet = new LinkedHashMap<>();
-		String str_entityName = null;
-		String str_catName = null;
-		Integer int_count_ = 0;
-		try (BufferedReader br = new BufferedReader(new FileReader(Global.pathLocal + fileName));) {
-			String line = null;
-			int depth = Global.levelOfTheTree;
-
-			ArrayList<String> arrList_paths = new ArrayList<>();
-
-			ArrayList<Integer> numberOfPaths = new ArrayList<>();
-			LinkedHashMap<String, Double> hmap_catAndValue = new LinkedHashMap<>();
-			while ((line = br.readLine()) != null) {
-				line = line.toLowerCase();
-				if (line.contains(",") && !line.contains("\",\"")) {
-
-					str_entityName = line.split(",")[0].toLowerCase();
-					str_catName = line.split(",")[1].toLowerCase();
-					// hmap_groundTruth.put(str_entityName, str_catName);
-
-				} else if (line.length() < 1) {
-					hmap_testSet.put(str_entityName + "__" + depth, hmap_catAndValue);
-					// System.out.println("WWW "+str_entityName + "__" + depth +
-					// " " +hmap_catAndValue);
-					hmap_catAndValue = new LinkedHashMap<>();
-					depth--;
-					numberOfPaths.clear();
-					arrList_paths.clear();
-				} else {
-					if (line.contains(":")) {
-
-						hmap_catAndValue.put(line.substring(0, line.indexOf(":")),
-								Double.parseDouble(line.substring(line.indexOf(":") + 1, line.length())));
-					} else if (line.contains("-")) {
-						int_count_++;
-					}
-				}
-				if (depth == 0) {
-					depth = Global.levelOfTheTree;
-					// hmap_entityStartingCat.put(str_entityName, ++int_count_);
-					int_count_ = 0;
-				}
-			}
-		} catch (IOException e) {
-
-			e.printStackTrace();
-
-		}
-
-		for (Integer i = 1; i <= 7; i++) {
-			for (Entry<String, String> entry : hmap_groundTruth.entrySet()) {
-				if (!hmap_testSet.containsKey(entry.getKey() + str_depthSeparator + i.toString())) {
-					System.out.println(entry);
-				}
-			}
-		}
-		return hmap_testSet;
-	}
+//	public Map<String, HashMap<String, Double>> initializeTestSet(String fileName) {
+//
+//		Map<String, HashMap<String, Double>> hmap_testSet = new LinkedHashMap<>();
+//		String str_entityName = null;
+//		String str_catName = null;
+//		Integer int_count_ = 0;
+//		try (BufferedReader br = new BufferedReader(new FileReader(Global.pathLocal + fileName));) {
+//			String line = null;
+//			int depth = Global.levelOfTheTree;
+//
+//			ArrayList<String> arrList_paths = new ArrayList<>();
+//
+//			ArrayList<Integer> numberOfPaths = new ArrayList<>();
+//			LinkedHashMap<String, Double> hmap_catAndValue = new LinkedHashMap<>();
+//			while ((line = br.readLine()) != null) {
+//				line = line.toLowerCase();
+//				if (line.contains(",") && !line.contains("\",\"")) {
+//
+//					str_entityName = line.split(",")[0].toLowerCase();
+//					str_catName = line.split(",")[1].toLowerCase();
+//					// hmap_groundTruth.put(str_entityName, str_catName);
+//
+//				} else if (line.length() < 1) {
+//					hmap_testSet.put(str_entityName + "__" + depth, hmap_catAndValue);
+//					// System.out.println("WWW "+str_entityName + "__" + depth +
+//					// " " +hmap_catAndValue);
+//					hmap_catAndValue = new LinkedHashMap<>();
+//					depth--;
+//					numberOfPaths.clear();
+//					arrList_paths.clear();
+//				} else {
+//					if (line.contains(":")) {
+//
+//						hmap_catAndValue.put(line.substring(0, line.indexOf(":")),
+//								Double.parseDouble(line.substring(line.indexOf(":") + 1, line.length())));
+//					} else if (line.contains("-")) {
+//						int_count_++;
+//					}
+//				}
+//				if (depth == 0) {
+//					depth = Global.levelOfTheTree;
+//					// hmap_entityStartingCat.put(str_entityName, ++int_count_);
+//					int_count_ = 0;
+//				}
+//			}
+//		} catch (IOException e) {
+//
+//			e.printStackTrace();
+//
+//		}
+//
+//		for (Integer i = 1; i <= 7; i++) {
+//			for (Entry<String, String> entry : hmap_groundTruth.entrySet()) {
+//				if (!hmap_testSet.containsKey(entry.getKey() + str_depthSeparator + i.toString())) {
+//					System.out.println(entry);
+//				}
+//			}
+//		}
+//		return hmap_testSet;
+//	}
 	
 	public double getThreshold() {
 		return threshold;
@@ -684,9 +709,18 @@ public class EvaluateHeuristicFunctions<K> {
 	public int getInt_topElementCount() {
 		return int_topElementCount;
 	}
-	public Map<String, String> getHmap_groundTruth() {
-		return hmap_groundTruth;
+
+	public Map<String, HashMap<String, Double>> getHmap_filteredResults() {
+		return hmap_filteredResults;
 	}
+	public  Map<String, HashSet<String>> getHmap_groundTruthlist() {
+		return hmap_groundTruthlist;
+	}
+	public Map<String, HashMap<String, Double>> getHmap_testSetDistinctPaths() {
+		return hmap_testSetDistinctPaths;
+	}
+
+
 
 
 }

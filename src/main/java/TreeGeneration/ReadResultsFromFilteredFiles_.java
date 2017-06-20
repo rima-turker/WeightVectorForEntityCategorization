@@ -31,7 +31,7 @@ public class ReadResultsFromFilteredFiles_
 
 		try {
 
-			BufferedReader br_MainCategory = new BufferedReader(new FileReader(Global.path_MainCategories));
+			BufferedReader br_MainCategory = new BufferedReader(new FileReader(Global.strPathMainCat));
 			String line_mainCategory = null;
 			while ((line_mainCategory = br_MainCategory.readLine()) != null) 
 			{

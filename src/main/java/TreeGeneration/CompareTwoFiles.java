@@ -10,7 +10,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -22,9 +24,41 @@ public class CompareTwoFiles {
 	 * @throws IOException 
 	 */
 	static String pathTree= System.getProperty("user.dir")+File.separator+"CategoryTrees"+File.separator+"CompleteTree_L";
-	static String pathZipFile= System.getProperty("user.dir")+File.separator+"PageInfoFile.zip";
 
-	public static void main() throws IOException 
+	public static void compareTwoFiles(String pathFileOne,String pathFileSecond)
+	{
+//		HashSet<String> fileOne = new HashSet<>(WriteReadFromFile.readFileToHashSet(pathFileOne));//Includes category:
+//		HashSet<String> fileSecond = new HashSet<>(WriteReadFromFile.readFileToHashSet(pathFileSecond)); //BuyukHarf
+//		int count =0;
+//		for (String lineSecond:fileSecond ) {
+//			if (!fileOne.contains(lineSecond.toLowerCase())) {
+//				System.out.println(lineSecond);
+//				count++;
+//				
+//			}
+//			
+//		}
+//		
+//		System.out.println(count);
+		
+		HashSet<String> fileOne = new HashSet<>(WriteReadFromFile.readFileToHashSet(pathFileOne));
+		HashSet<String> fileSecond = new HashSet<>(WriteReadFromFile.readFileToHashSet(pathFileSecond)); //BuyukHarf
+		int count =0;
+		for (String lineOne:fileOne ) {
+			
+			if (!fileSecond.contains(lineOne.toLowerCase())) {
+				System.out.println(lineOne);
+				count++;
+				
+			}
+			
+		}
+		
+		System.out.println(count);
+		
+	}
+	
+	public void readZipFile(String pathZipFile)
 	{
 		Date start = new Date();
 		try {
@@ -48,7 +82,7 @@ public class CompareTwoFiles {
 
 
 						File log=null;
-						log = new File(System.getProperty("user.dir")+File.separator+"CategoryTreeFilteredMainFiles"+File.separator+ze.getName()+
+						log = new File(System.getProperty("user.dir")+File.separator+"CategoryTreeFilteredMainFile"+File.separator+ze.getName()+
 								"_L"+i.toString());
 
 						if (log.exists()) 
@@ -91,7 +125,6 @@ public class CompareTwoFiles {
 							
 								hsetResult.add(lineMain);
 							}
-							//System.out.println(lineMain);
 						}
 						
 						for(String line:hsetResult) 
@@ -118,7 +151,9 @@ public class CompareTwoFiles {
 	Date end = new Date();
 	System.out.println ("MainLoop: "+(end.getTime() - start.getTime())/1000 + " seconds");
 
-}	
+}
+
+	
 
 
 //    while ((lineCategory = br_CategoryLevel.readLine()) != null) 

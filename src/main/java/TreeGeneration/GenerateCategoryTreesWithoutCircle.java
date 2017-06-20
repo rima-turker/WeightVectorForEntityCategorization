@@ -38,7 +38,7 @@ public class GenerateCategoryTreesWithoutCircle
 		HashMap<String, HashSet<String>> hmap_categoryMap = new HashMap<>();
 		try 
 		{
-			BufferedReader br_MainCategory = new BufferedReader(new FileReader(Global.path_MainCategories));
+			BufferedReader br_MainCategory = new BufferedReader(new FileReader(Global.strPathMainCat));
 			String line_mainCategory = null;
 			String line=null;
 			while ((line_mainCategory = br_MainCategory.readLine()) != null) 

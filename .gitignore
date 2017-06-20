@@ -1,3 +1,9 @@
 /.gradle/
 /bin/
 /build/
+/src/main/resources/*
+/src_/*
+/src_19.06.2016/*
+/src/test/resource/*
+/src/main/resource/*
+/src/main/resources/*

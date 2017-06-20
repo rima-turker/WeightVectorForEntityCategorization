@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -12,11 +13,41 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import TreeGeneration.EvaluateHeuristicFunctions;
+import TreeGeneration.Global;
+import TreeGeneration.ReadGroundTruth;
 
 import java.util.Set;
 
 public class MapUtil 
 {
+	
+	public static HashSet<String> getKeySetFromMap(Map<String, HashMap<String, Double>> mp )
+	{	
+		HashSet<String> setEntities = new HashSet<>();
+		for (Entry<String, HashMap<String, Double>> entry : mp.entrySet()) 
+		{
+			setEntities.add(entry.getKey().substring(0,entry.getKey().indexOf(Global.str_depthSeparator)));
+		}
+		return setEntities;
+	}
+	public static HashSet<String> getKeySetFromMap_2(Map<String, HashSet<String>> mp )
+	{	
+		HashSet<String> setEntities = new HashSet<>();
+		for (Entry<String, HashSet<String>> entry : mp.entrySet()) 
+		{
+			setEntities.add(entry.getKey());
+		}
+		return setEntities;
+	}
+	public static HashSet<String> getKeySetFromMap_3(Map<String,String> mp )
+	{	
+		HashSet<String> setEntities = new HashSet<>();
+		for (Entry<String, String> entry : mp.entrySet()) 
+		{
+			setEntities.add(entry.getKey());
+		}
+		return setEntities;
+	}
 	private static Map<String, Double> sortByValues(Map<String, Double> unsortMap) { 
 		Map<String, Double> result = new LinkedHashMap<>();
 
@@ -26,7 +57,26 @@ public class MapUtil
 		.forEachOrdered(x -> result.put(x.getKey(), x.getValue()));
 		return result;
 	}
+	public static Map<String, HashMap<String, Double>> getAsMapCertainLevel(int level,Map<String, HashMap<String, Double>> mapAggregated)
+	{
+			
+		Map<String, HashMap<String, Double>> mapResult = new HashMap<>();
+		
+		for (Entry<String, HashMap<String, Double>> entry : mapAggregated.entrySet()) {
+			
+			String str_entityNameAndDepth = entry.getKey();
+			String str_depth =str_entityNameAndDepth.split("\t")[1];
+			
+			if (str_depth.equals(Integer.toString(level)))
+			{
+				mapResult.put(entry.getKey(), entry.getValue());
+			}
 
+
+		}
+		
+		return mapResult;
+	}
 	public static <K, V extends Comparable<? super V>> Map<K, V> 
 	sortByValue( Map<K, V> map )
 	{

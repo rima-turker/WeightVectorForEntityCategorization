@@ -14,10 +14,10 @@ import java.util.Map.Entry;
 
 public class CreateCategoryTrees 
 {
-	public static void main() throws IOException 
+	public static void main() 
 	{
 		Map<String, HashSet<String>> hmap_catMap = new HashMap<>(createCategoryTrees());
-		writeCategoryTreeToAFile(hmap_catMap, "CategoryTrees_encoding");
+		//writeCategoryTreeToAFile(hmap_catMap, "CategoryTrees");
 	}
 	
 	private static HashMap<String, HashSet<String>> createCategoryTrees() 
@@ -27,7 +27,7 @@ public class CreateCategoryTrees
 		HashMap<String, HashSet<String>> hmap_categoryMap = new HashMap<>();
 		try 
 		{
-			BufferedReader br_MainCategory = new BufferedReader(new FileReader(Global.path_MainCategories));
+			BufferedReader br_MainCategory = new BufferedReader(new FileReader(Global.strPathMainCat));
 			String line_mainCategory = null;
 			String line=null;
 			while ((line_mainCategory = br_MainCategory.readLine()) != null) 

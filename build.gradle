@@ -10,7 +10,7 @@ apply plugin: 'eclipse'
 
 mainClassName="TreeGeneration.Main"
 
-applicationDefaultJvmArgs = ["-Xmx45g"]
+applicationDefaultJvmArgs = ["-Xmx50g"]
 
 repositories {
     jcenter()
@@ -26,6 +26,10 @@ dependencies {
 
 ssh.settings {
     dryRun = project.hasProperty('dryRun')
+}
+
+applicationDistribution.from("src/main/resources/log4j.properties") {
+    into "bin"
 }
 
 remotes {
@@ -52,9 +56,7 @@ task deploy(dependsOn: installDist) << {
         	execute 'rm -rf /home/rima/playground/CurrentlyWorking/WeightVectorGeneration'
             put from: './build/install/WeightVectorForEntityCategorization', into: '/home/rima/playground/CurrentlyWorking'
             execute 'chmod +x /home/rima/playground/CurrentlyWorking/WeightVectorForEntityCategorization/bin/WeightVectorForEntityCategorization'
-            execute 'cd /home/rima/playground/CurrentlyWorking/WeightVectorForEntityCategorization/bin && ./WeightVectorForEntityCategorization /home/rima/playground/CurrentlyWorking/WeightVectorEntities /home/rima/playground/CurrentlyWorking/pageLinks_DistinctPaths.csv'
-        	//execute 'cd /home/rima/playground/CurrentlyWorking/WeightVectorForEntityCategorization/bin && ./WeightVectorForEntityCategorization /home/rima/playground/CurrentlyWorking/heuristic_formated'
-        	//heuristic_formated
+        	execute 'cd /home/rima/playground/CurrentlyWorking/WeightVectorForEntityCategorization/bin && ./WeightVectorForEntityCategorization /home/rima/playground/CurrentlyWorking/albert /home/rima/playground/CurrentlyWorking/CategoryTrees_2016 /home/rima/playground/CurrentlyWorking/MainCategoryFile /home/rima/playground/CurrentlyWorking/albert'
         
         }
     }
