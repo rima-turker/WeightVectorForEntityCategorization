@@ -14,6 +14,7 @@ public class Global
 	public static final String str_depthSeparator = "\t";
 	public static final String strFileDepthSeparator = "__";
 	final static String pathTestFile_tab =pathLocal+"article_cats2016_7.tsv"; //"articleDistinctPaths_Formated";
+	final static String pathServer="/home/rima/playground/CurrentlyWorking/";
 //	final static String pathTestFile_tab =pathLocal+"DistinctPaths_PageLinks_2015.tsv";
 //	
 //	final static String pathTestFile_coma =pathLocal+ "DistinctPaths_new.csv";//"article_cats_formated.csv";

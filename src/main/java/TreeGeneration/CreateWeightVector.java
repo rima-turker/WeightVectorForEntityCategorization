@@ -57,19 +57,18 @@ public class CreateWeightVector
 		HashSet<String> entities = new HashSet<>(MapUtil.getKeySetFromMap(hmap_weightVectorLinks));
 		System.out.println("Unique entity size "+ entities.size());
 		
-		System.out.println("Map Size Should be " + entities.size()*7+ "nbut "+ hmap_weightVectorLinks.size());
+		System.out.println("Map Size Should be " + entities.size()*7+ " but "+ hmap_weightVectorLinks.size());
 		final Map<String, HashMap<String, Double>> hmap_FixedweightVectorLinks = WriteReadFromFile.fixSpecialCharProblem(hmap_weightVectorLinks, entities);
-		
-		final HeurisitcFunctions heurisitcFun = new HeurisitcFunctions(hmap_FixedweightVectorLinks, getHeuristic(),
-				hmap_weightVectorLinks.size()/Global.levelOfTheTree);
-		
-//		final HeurisitcFunctions heurisitcFun = new HeurisitcFunctions(hmap_weightVectorLinks, getHeuristic(),
-//				hmap_weightVectorLinks.size()/Global.levelOfTheTree);
 //		
+		final HeurisitcFunctions heurisitcFun = new HeurisitcFunctions(hmap_FixedweightVectorLinks, getHeuristic(), entities.size());
+		
+////		final HeurisitcFunctions heurisitcFun = new HeurisitcFunctions(hmap_weightVectorLinks, getHeuristic(),
+////				hmap_weightVectorLinks.size()/Global.levelOfTheTree);
+////		
 		final Map<String, HashMap<String, Double>> hmap_heuResult = new HashMap<>(heurisitcFun.callHeuristic());
 	
 		System.out.println("finished heuristic Function "+  " size" + hmap_heuResult.size());
-		
+//		
 		final Map<String, HashMap<String, Double>> hmap_addCatValuesTillDepth = aggregateCategoryValues(
 				hmap_heuResult);
 		
@@ -79,18 +78,18 @@ public class CreateWeightVector
 		
 		System.out.println("Only 7th layer size "+ mapAggregatedTillDepth.size());
 		
-		//WriteReadFromFile.writeMapToAFile(mapAggregatedTillDepth,"aggregatedOnly7level");
-		Print.printMap(mapAggregatedTillDepth);
-		System.out.println("Finished writing");
-		
-		final Map<String, HashMap<String, Double>> hmap_normalizedDepthBased = Normalization
-				.normalize_LevelBased(mapAggregatedTillDepth);
+		WriteReadFromFile.writeMapToAFile(mapAggregatedTillDepth,Global.pathServer+"article_cat2016_WV");
+//		Print.printMap(mapAggregatedTillDepth);
+//		System.out.println("Finished writing");
 		
 //		final Map<String, HashMap<String, Double>> hmap_normalizedDepthBased = Normalization
-//				.normalize_LevelBased(hmap_addCatValuesTillDepth);
+//				.normalize_LevelBased(mapAggregatedTillDepth);
 //		
-		final Map<String, HashMap<String, Double>> hmap_filteredResults = filterHeuResults(
-				hmap_normalizedDepthBased, getThreshold());
+////		final Map<String, HashMap<String, Double>> hmap_normalizedDepthBased = Normalization
+////				.normalize_LevelBased(hmap_addCatValuesTillDepth);
+////		
+//		final Map<String, HashMap<String, Double>> hmap_filteredResults = filterHeuResults(
+//				hmap_normalizedDepthBased, getThreshold());
 		
 //		System.out.println("finished filtering "+  " size" + hmap_filteredResults.size());
 //		

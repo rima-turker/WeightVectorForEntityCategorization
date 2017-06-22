@@ -234,7 +234,7 @@ public class WriteReadFromFile
 			e.printStackTrace();
 		}
 	}
-	public static void formatMapFile(String str_fileName) 
+	public static void formatMapFile(String str_fileName, String pathResultFile) 
 	{
 		//sed 's/__1={/,1,/' pageLinksDistinctPaths | sed 's/__2={/,2,/' | sed 's/__3={/,3,/' | sed 's/__4={/,4,/' | sed 's/__5={/,5,/' | sed 's/__6={/,6,/' | sed 's/__7={/,7,/' | sed 's/}//'
 	
@@ -243,11 +243,11 @@ public class WriteReadFromFile
 		 */
 		String line=null;
 		try {
-			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(str_fileName+"_Formated"), false));
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(pathResultFile), false));
 			BufferedReader br_MainFile = new BufferedReader(new FileReader(str_fileName));
 			while ((line = br_MainFile.readLine()) != null) 
 			{
-				line=line.toLowerCase().replace("1={", "\t1\t").replace("2={", "\t2\t").replace("3={", "\t3\t").replace("4={", "\t4\t").replace("5={", "\t5\t").replace("6={", "\t6\t").replace("7={", "\t7\t").replace("}", "").replace(", ", "\t");
+				line=line.toLowerCase().replace("1={", "1\t").replace("2={", "2\t").replace("3={", "3\t").replace("4={", "4\t").replace("5={", "5\t").replace("6={", "6\t").replace("7={", "7\t").replace("}", "").replace(", ", "\t");
 				
 				bufferedWriter.write(line);
 				bufferedWriter.newLine();

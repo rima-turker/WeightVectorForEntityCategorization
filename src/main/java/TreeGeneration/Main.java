@@ -21,20 +21,28 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 		
-		//CreateCategoryTrees.main();
+		new CreateWeightVector(Global.pathServer+"article_cats2016_7_DistinctPaths_formated_", 0.07, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
 		
-//		System.out.println(args.length);
-//		for (int i = 0; i < args.length; i++) {
-//			System.out.println(args[i]);
-//		}
+		
+		//0-CategoryTrees_2016 //1-MainCategoryFile //2-article_categories_clean2016 //3-
+		
+		
+//		ReadResultsFromFilteredFiles read = new ReadResultsFromFilteredFiles(args[0],args[1]);
+//		read.createCategoryMap();
+//		CompareTwoFilesForCatFiltering.compareHashsetAndFile(args[2], read.getHset_allCats());
 	
-		final String goalSetFile=Global.pathLocal+"GoalSet_Majority.tsv"; //0.7257379773936717 
+//		WriteReadFromFile.writeMapToAFile(read.ReadResults_withLevel(read.createCategoryMap(), Global.pathServer+"article_categories_clean2016_CatFiltered_7"),"article_cats2016_7_withSubCats");
+//		WriteReadFromFile.writeMapToAFile(ReadResultsFromFilteredFiles.readAndCreateMapDistinctPaths(Global.pathServer+"article_cats2016_7_withSubCats"),Global.pathServer+"article_cats2016_7_DistinctPaths");
+//		WriteReadFromFile.formatMapFile(Global.pathServer+"article_cats2016_7_DistinctPaths", Global.pathServer+"article_cats2016_7_DistinctPaths_formated");
 		
-//		final String goalSetFile=Global.pathLocal+"GoalSet_Blog.tsv";
-//		final String goalSetFile=Global.pathLocal+"GoalSet_Uni.tsv"; // 0.7108394111399493
-	
-		new CreateWeightVector(Global.pathTestFile_tab, 0.07, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
 		
+//		final String goalSetFile=Global.pathLocal+"GoalSet_Majority.tsv"; //0.7257379773936717 
+//		
+////		final String goalSetFile=Global.pathLocal+"GoalSet_Blog.tsv";
+////		final String goalSetFile=Global.pathLocal+"GoalSet_Uni.tsv"; // 0.7108394111399493
+//	
+//		new CreateWeightVector(Global.pathTestFile_tab, 0.07, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
+//		
 //		for (double the = 0.01; the<=0.2; the += 0.01) {
 //		 System.out.println("--------------------Threshold-------------------"+
 //		the);

@@ -56,7 +56,7 @@ task deploy(dependsOn: installDist) << {
         	execute 'rm -rf /home/rima/playground/CurrentlyWorking/WeightVectorGeneration'
             put from: './build/install/WeightVectorForEntityCategorization', into: '/home/rima/playground/CurrentlyWorking'
             execute 'chmod +x /home/rima/playground/CurrentlyWorking/WeightVectorForEntityCategorization/bin/WeightVectorForEntityCategorization'
-        	execute 'cd /home/rima/playground/CurrentlyWorking/WeightVectorForEntityCategorization/bin && ./WeightVectorForEntityCategorization /home/rima/playground/CurrentlyWorking/albert /home/rima/playground/CurrentlyWorking/CategoryTrees_2016 /home/rima/playground/CurrentlyWorking/MainCategoryFile /home/rima/playground/CurrentlyWorking/albert'
+        	execute 'cd /home/rima/playground/CurrentlyWorking/WeightVectorForEntityCategorization/bin && ./WeightVectorForEntityCategorization /home/rima/playground/CurrentlyWorking/CategoryTrees_2016 /home/rima/playground/CurrentlyWorking/MainCategoryFile /home/rima/playground/CurrentlyWorking/article_categories_clean2016'
         
         }
     }

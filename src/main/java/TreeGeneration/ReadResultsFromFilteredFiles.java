@@ -174,6 +174,7 @@ public class ReadResultsFromFilteredFiles
 				{
 					
 					System.err.println("Main category could not found "+str_entCat);
+					System.out.println(line_mainCategory+" "+str_entName+" "+str_entCat);
 					
 				}
 				
