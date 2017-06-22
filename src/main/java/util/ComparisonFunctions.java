@@ -1,15 +1,24 @@
 package util;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import TreeGeneration.Global;
 import TreeGeneration.Print;
@@ -115,24 +124,96 @@ public class ComparisonFunctions
 	}
 	public static void compareTwoHashSet(HashSet<String> hset_first, HashSet<String> hset_second)
 	{
-		System.out.println("Second dos not contain");
 		for (String str_firstElement : hset_first) 
 		{
 			if (!hset_second.contains(str_firstElement))
 			{
-				System.out.println(str_firstElement);
+				System.out.println("Second dos not contain "+str_firstElement);
 			}
 		}
-		System.out.println("First dos not contain");
 		for (String str_firstElement : hset_second) 
 		{
 			if (!hset_first.contains(str_firstElement))
 			{
-				System.out.println(str_firstElement);
+				System.out.println("First dos not contain "+str_firstElement);
 			}
 		}
-		System.out.println("Finished Comparing");
+		//System.out.println("Finished Comparing");
 	}
+	public static void compareZipAndHashSet(String pathZipFile, HashSet<String> hsetCats,String srtResultFileName)
+	{
+		Date start = new Date();
+		try {
+			ZipFile zf = new ZipFile(pathZipFile);
+			Enumeration<? extends ZipEntry> entries = zf.entries();
+
+			while (entries.hasMoreElements()) 
+			{
+				ZipEntry ze = (ZipEntry) entries.nextElement();
+				//ze = (ZipEntry) entries.nextElement();
+				long size = ze.getSize();
+				if (size > 0) 
+				{
+					BufferedReader br_mainFile = new BufferedReader(
+							new InputStreamReader(zf.getInputStream(ze)));
+
+						File log=null;
+						log = new File(srtResultFileName+ze.getName());
+
+						if (log.exists()) 
+						{
+							log.delete();
+						}
+						log.createNewFile();
+
+						BufferedWriter bufferedWriter = null;
+						FileWriter fileWriter;
+
+						fileWriter = new FileWriter(log, false);
+						bufferedWriter = new BufferedWriter(fileWriter);
+
+						String lineMain;
+
+						int count = 0;
+
+						HashSet<String> hsetResult = new HashSet<>();
+
+						br_mainFile = new BufferedReader(
+								new InputStreamReader(zf.getInputStream(ze)));
+
+						while ((lineMain = br_mainFile.readLine()) != null) 
+						{
+							count++;
+							lineMain=lineMain.toLowerCase().replace(">", "");
+							if (hsetCats.contains(lineMain.split(" ")[2]))
+							{
+								hsetResult.add(lineMain);
+							}
+						}
+						
+						for(String line:hsetResult) 
+						{
+							bufferedWriter.write(line);
+							bufferedWriter.newLine();
+						}
+						System.out.println("size"+hsetResult.size());
+						System.out.println("count"+count);
+						count=0;
+						
+						br_mainFile.close();
+						bufferedWriter.close();
+					}
+					
+				}
+	}
+	catch (IOException e) {
+		e.printStackTrace();
+	}
+	Date end = new Date();
+	System.out.println ("MainLoop: "+(end.getTime() - start.getTime())/1000 + " seconds");
+
+}
+	
 	public static boolean isZipFile(File file) throws IOException {
 	      if(file.isDirectory()) {
 	          return false;

@@ -32,7 +32,7 @@ public class WriteReadFromFile
 			while (entries.hasMoreElements()) 
 			{
 				ZipEntry ze = (ZipEntry) entries.nextElement();
-				ze = (ZipEntry) entries.nextElement();
+				//ze = (ZipEntry) entries.nextElement();
 				long size = ze.getSize();
 				if (size > 0) 
 				{
@@ -44,14 +44,27 @@ public class WriteReadFromFile
 						String lineMain;
 						while ((lineMain = br_mainFile.readLine()) != null) 
 						{
-							hsetResult.add(lineMain);
+							
+							if (lineMain.split(" ")[0].equals("Albert_Einstein>")) 
+							{
+								hsetResult.add(lineMain);
+							}
+							
 						}
 						System.out.println("size"+hsetResult.size());
 						br_mainFile.close();
+						
+						for (String str : hsetResult) 
+						{
+							System.out.println(str);
+						}
+							
+						
+						
 					}
 					
 				}
-				
+			
 	}
 	catch (IOException e) {
 		e.printStackTrace();

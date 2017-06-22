@@ -46,6 +46,9 @@ public class ReadResultsFromFilteredFiles
 
 				for(int i=1 ; i<=Global.levelOfTheTree; i++)
 				{
+//					String str_fileName = line_mainCategory.replace(">", "").toLowerCase()+"__"
+//							+i;
+					
 					String str_fileName = line_mainCategory.replace(">", "").toLowerCase()+"__"
 							+i;
 					

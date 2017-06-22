@@ -77,6 +77,10 @@ public class EvaluateHeuristicFunctions {
 			//hmap_groundTruth = new LinkedHashMap<>(initializeGroundTruthAndList(str_fileNameGroundTruthList));
 			hmap_testSetDistinctPaths = WriteReadFromFile
 					.readTestSet_tab(strTestFileName);
+			HashSet<String> setTestSetEntities = new HashSet<>(MapUtil.getKeySetFromMap(hmap_testSetDistinctPaths));
+			HashSet<String> setGTEntities = new HashSet<>(MapUtil.getKeySetFromMap_2(hmap_groundTruthlist));
+			
+			ComparisonFunctions.compareTwoHashSet(setTestSetEntities, setGTEntities);
 ////			
 //			final Map<String, HashMap<String, Double>> hmap_Testsecond = WriteReadFromFile
 //					.readTestSet_coma(Global.pathTestFile_coma);
@@ -94,14 +98,11 @@ public class EvaluateHeuristicFunctions {
 			
 			final Map<String, HashMap<String, Double>> hmap_addCatValuesTillDepth = aggregateCategoryValues(
 					hmap_heuResult);
-			
+			Print.printMap(hmap_addCatValuesTillDepth);
 			final Map<String, HashMap<String, Double>> hmap_normalizedDepthBased = Normalization
 					.normalize_LevelBased(hmap_addCatValuesTillDepth);
 
 			this.hmap_filteredResults = new HashMap<>(filterHeuResults(hmap_normalizedDepthBased, getThreshold()));
-			
-			
-			//calculatePreRcallFscore_levelBased(hmap_filteredResults,hmap_groundTruthlist);
 			calculatePreRcallFscore_levelBased(hmap_filteredResults,getHmap_groundTruthlist());
 			
 		} 
@@ -217,19 +218,42 @@ public class EvaluateHeuristicFunctions {
 	public Map<String, Double> calculatePreRcallFscore_levelBased(
 			final Map<String, HashMap<String, Double>> hmap_filteredEntDepthBased,Map<String, HashSet<String>> hmap_groundTruthlist) throws Exception {
 		
+//		for (Entry<String, HashMap<String, Double>> entry : hmap_filteredEntDepthBased.entrySet()) {
+//			
+//			String str_entityNameAndDepth = entry.getKey();
+//			String str_entityName=str_entityNameAndDepth.split("\t")[0];
+//			String str_depth =str_entityNameAndDepth.split("\t")[1];
+//			//System.out.println(str_entityNameAndDepth);
+//			if (!hmap_groundTruthlist.containsKey(str_entityName)) 
+//			{
+//				System.out.println(str_entityNameAndDepth);
+//				System.out.println("Does not contain");
+//			}
+//			
+//		}
+//		for (Entry<String, HashSet<String>> entry : hmap_groundTruthlist.entrySet()) {
+//			
+//			System.out.println(entry.getKey());
+//		}
+		
+		
 		Map<String, HashMap<String, Double>> hmap_precisionRecall = new HashMap<>();
 		Map<String, Double> hmap_fmeasure = new HashMap<>();
 		int count = 0;
+		
 		for (Entry<String, HashMap<String, Double>> entry : hmap_filteredEntDepthBased.entrySet()) {
+			
 			String str_entityNameAndDepth = entry.getKey();
-			String str_depth = str_entityNameAndDepth.substring(
-					str_entityNameAndDepth.indexOf(Global.str_depthSeparator) + Global.str_depthSeparator.length(),
-					str_entityNameAndDepth.length());
-			String str_entityName = str_entityNameAndDepth.substring(0,
-					str_entityNameAndDepth.indexOf(Global.str_depthSeparator));
+			String str_entityName=str_entityNameAndDepth.split("\t")[0];
+			String str_depth =str_entityNameAndDepth.split("\t")[1];
 			
-			//System.out.print(str_entityName+"\t"+str_depth);
-			
+//			if (str_depth.equals("1")) {
+//				System.out.print(str_entityName+"\t"+str_depth);
+//			}
+//			if (str_entityName.contains("joliot-curie")) 
+//			{
+//				System.out.println("Yes");
+//			}
 			if (hmap_groundTruthlist.containsKey(str_entityName))
 			{
 				HashSet<String> hset_temp = new HashSet<>();
@@ -244,8 +268,8 @@ public class EvaluateHeuristicFunctions {
 			else
 			{
 				
-				System.err.println("--------------------------"+str_entityNameAndDepth+" not in the ground truth"+"--------------------------");
-				break;
+				System.err.println("--------------------------"+str_entityNameAndDepth+" not in the ground truth System Exit"+"--------------------------");
+				System.exit(1);
 			}
 		}
 	
@@ -305,9 +329,9 @@ public class EvaluateHeuristicFunctions {
 		str_Rec += "\",\",\")";
 		str_Fsco += "\",\",\")";
 
-		System.out.println(str_Pre.replace("=SPLIT(\" ,", "=SPLIT(\"Precision ,"));
-		System.out.println(str_Rec.replace("=SPLIT(\" ,", "=SPLIT(\"Recall ,"));
-		System.out.println(str_Fsco.replace("=SPLIT(\" ,", "=SPLIT(\"Fmeasure ,"));
+//		System.out.println(str_Pre.replace("=SPLIT(\" ,", "=SPLIT(\"Precision ,"));
+//		System.out.println(str_Rec.replace("=SPLIT(\" ,", "=SPLIT(\"Recall ,"));
+//		System.out.println(str_Fsco.replace("=SPLIT(\" ,", "=SPLIT(\"Fmeasure ,"));
 		
 		return hmap_fmeasure;
 	}

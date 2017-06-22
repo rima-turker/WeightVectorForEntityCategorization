@@ -112,10 +112,11 @@ public class CompareTwoFilesForCatFiltering {
 				{
 					bufferedWriter.write(line);
 					bufferedWriter.newLine();
+					
 				}
 	
 				System.out.println("size"+hsetResult.size());
-				//System.out.println("count"+count);
+				System.out.println("count"+count);
 				count=0;
 				
 				br_mainFile.close();       

@@ -8,10 +8,12 @@ public class Global
 	public final static  String pathZip= pathLocal+"articleAndSkosBroader_2016.zip";
 	public final static  String pathLocal_test = System.getProperty("user.dir") + File.separator + "src" + File.separator + "test"+ File.separator +"resources"+ File.separator ;
 	public static final int levelOfTheTree=7;
-	public static final String path_SkosFile= System.getProperty("user.dir")+ File.separator+ "skos_broader_CatCleaned_sort.txt";
+	public static final String entityListTest = pathLocal+ "EntitiesForTest";
+	public static final String path_SkosFile= Global.pathLocal+ "skos_cats_broader_sort2016";
 	public static final String strPathMainCat= pathLocal +"MainCategoryFile";
 	public static final String str_depthSeparator = "\t";
-	final static String pathTestFile_tab =pathLocal+"article_cats_formated_2016.tsv"; //"articleDistinctPaths_Formated";
+	public static final String strFileDepthSeparator = "__";
+	final static String pathTestFile_tab =pathLocal+"article_cats2016_7.tsv"; //"articleDistinctPaths_Formated";
 //	final static String pathTestFile_tab =pathLocal+"DistinctPaths_PageLinks_2015.tsv";
 //	
 //	final static String pathTestFile_coma =pathLocal+ "DistinctPaths_new.csv";//"article_cats_formated.csv";

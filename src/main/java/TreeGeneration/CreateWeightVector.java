@@ -79,8 +79,8 @@ public class CreateWeightVector
 		
 		System.out.println("Only 7th layer size "+ mapAggregatedTillDepth.size());
 		
-		WriteReadFromFile.writeMapToAFile(mapAggregatedTillDepth,"aggregatedOnly7level");
-		
+		//WriteReadFromFile.writeMapToAFile(mapAggregatedTillDepth,"aggregatedOnly7level");
+		Print.printMap(mapAggregatedTillDepth);
 		System.out.println("Finished writing");
 		
 		final Map<String, HashMap<String, Double>> hmap_normalizedDepthBased = Normalization
@@ -94,7 +94,8 @@ public class CreateWeightVector
 		
 //		System.out.println("finished filtering "+  " size" + hmap_filteredResults.size());
 //		
-		WriteReadFromFile.writeMapToAFile(hmap_filteredResults, "MapFormatedWeightVector_7");
+		//WriteReadFromFile.writeMapToAFile(hmap_filteredResults, "MapFormatedWeightVector_7");
+		
 		System.out.println("Finished");
 
 	}

@@ -17,7 +17,7 @@ public class CreateCategoryTrees
 	public static void main() 
 	{
 		Map<String, HashSet<String>> hmap_catMap = new HashMap<>(createCategoryTrees());
-		//writeCategoryTreeToAFile(hmap_catMap, "CategoryTrees");
+		writeCategoryTreeToAFile(hmap_catMap, "CategoryTrees_2016");
 	}
 	
 	private static HashMap<String, HashSet<String>> createCategoryTrees() 
@@ -40,7 +40,7 @@ public class CreateCategoryTrees
 				{
 					HashSet<String> hset_tempCats = new HashSet<>();
 					String str_depth=Integer.toString(i);
-					String str_catAndLevel = str_mainCategoryName+Global.str_depthSeparator+str_depth;
+					String str_catAndLevel = str_mainCategoryName+Global.strFileDepthSeparator+str_depth;
 					if (i==1) 
 					{
 						hset_tempCats.add(str_mainCategoryName);
@@ -50,7 +50,7 @@ public class CreateCategoryTrees
 					{
 						int int_childDepth = i-1;
 						
-						HashSet<String> hsetParents = new HashSet<>(hmap_categoryMap.get(str_mainCategoryName+Global.str_depthSeparator+Integer.toString(int_childDepth)));
+						HashSet<String> hsetParents = new HashSet<>(hmap_categoryMap.get(str_mainCategoryName+Global.strFileDepthSeparator+Integer.toString(int_childDepth)));
 						BufferedReader br_MainFile = new BufferedReader(new FileReader(Global.path_SkosFile));
 						
 						while ((line = br_MainFile.readLine()) != null)
@@ -94,7 +94,7 @@ public class CreateCategoryTrees
 			for (Entry<String, HashSet <String>> entry: hmap.entrySet()) 
 			{
 				String str_entName = entry.getKey();
-				File file = new File(Global.pathLocal+ str_entName);
+				File file = new File(str_entName);
 				file.createNewFile();
 				BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
 				
