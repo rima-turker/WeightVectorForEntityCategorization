@@ -1,5 +1,6 @@
 package TreeGeneration;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -26,6 +27,7 @@ public class Main {
 		
 		//0-CategoryTrees_2016 //1-MainCategoryFile //2-article_categories_clean2016 //3-
 		
+
 		
 //		ReadResultsFromFilteredFiles read = new ReadResultsFromFilteredFiles(args[0],args[1]);
 //		read.createCategoryMap();
@@ -35,6 +37,19 @@ public class Main {
 //		WriteReadFromFile.writeMapToAFile(ReadResultsFromFilteredFiles.readAndCreateMapDistinctPaths(Global.pathServer+"article_cats2016_7_withSubCats"),Global.pathServer+"article_cats2016_7_DistinctPaths");
 //		WriteReadFromFile.formatMapFile(Global.pathServer+"article_cats2016_7_DistinctPaths", Global.pathServer+"article_cats2016_7_DistinctPaths_formated");
 		
+
+//		System.out.println(args.length);
+//		for (int i = 0; i < args.length; i++) {
+//			System.out.println(args[i]);
+//		}
+	
+//		final String goalSetFile=Global.pathLocal+"GoalSet_Majority.tsv"; //0.7257379773936717 
+		
+//		final String goalSetFile=Global.pathLocal+"GoalSet_Blog.tsv";
+//		final String goalSetFile=Global.pathLocal+"GoalSet_Union.tsv"; // 0.7108394111399493
+	
+//		new CreateWeightVector(Global.pathTestFile_tab, 0.07, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
+
 		
 //		final String goalSetFile=Global.pathLocal+"GoalSet_Majority.tsv"; //0.7257379773936717 
 //		
@@ -49,22 +64,22 @@ public class Main {
 //		for (Global.HeuristicType heu : Global.HeuristicType.values()) 
 //		{
 //		    //System.out.println("heuristic function"+ heu); 
-//			EvaluateHeuristicFunctions eva = new EvaluateHeuristicFunctions(goalSetFile, Global.pathTestFile_tab, the, HeuristicType.HEURISTIC_COMBINATION4TH5TH);
+//			EvaluateHeuristicFunctions eva = new EvaluateHeuristicFunctions(goalSetFile, Global.pathTestFile_tab, the, heu);
 //			eva.main();
 //		}
 //	}
-//	Map<String, Double> hmap_fmeasure = new HashMap<>();
-//	hmap_fmeasure=MapUtil.entriesSortedByValues(EvaluateHeuristicFunctions.hmap_fmeasureAll);
-//	int count =0;
-//	for (Entry <String, Double>   entry: hmap_fmeasure.entrySet()) 
-//	{
-//		System.out.println(entry.getKey()+" "+entry.getValue());
-//		count++;
-//		if (count==50) 
+//		Map<String, Double> hmap_fmeasure = new HashMap<>();
+//		hmap_fmeasure=MapUtil.entriesSortedByValues(EvaluateHeuristicFunctions.hmap_fmeasureAll);
+//		int count =0;
+//		for (Entry <String, Double>   entry: hmap_fmeasure.entrySet()) 
 //		{
-//			break;
+//			System.out.println(goalSetFile+" "+entry.getKey()+" "+entry.getValue());
+//			count++;
+//			if (count==50) 
+//			{
+//				break;
+//			}
 //		}
-//	}
 		
 		
 //		ReadResultsFromFilteredFiles read = new ReadResultsFromFilteredFiles(Global.pathLocal+"CategoryTrees_2016",Global.strPathMainCat);
@@ -106,24 +121,20 @@ public class Main {
 //		}
 		
 		
-		
-		
-		
 //		WriteReadFromFile.writeMapToAFile(ReadResultsFromFilteredFiles.readAndCreateMapDistinctPaths(args[3]),"article_cats2016_7_DistinctPaths");
 		
 		
-//		ArrayList<Integer> arrList = new ArrayList<>();
-//		arrList.add(1);
+		ArrayList<Integer> arrList = new ArrayList<>();
+		arrList.add(10);
 //		arrList.add(3);
 //		arrList.add(5);
-//		
-//		for (int i = 0; i < arrList.size(); i++) 
-//		{
-//			System.out.println("Top "+ arrList.get(i) +" elements");
-//			EvaluateTopNElements evaTopN = new EvaluateTopNElements(arrList.get(i), Global.pathTestFile_tab);
-//			evaTopN.calculatePrecisionAndRecallForTopN();
-//			
-//		}
+		
+		for (int i = 0; i < arrList.size(); i++) 
+		{
+			System.out.println("Top "+ arrList.get(i) +" elements");
+			EvaluateTopNElements evaTopN = new EvaluateTopNElements(arrList.get(i), Global.pathTestFile_tab);
+			evaTopN.calculatePrecisionAndRecallForTopN();
+		}
 		
 		
 //		CompareTwoFiles.compareTwoFiles(Global.pathLocal+"PageLinks_EntityCatFiltered_7", Global.pathLocal+"article_Cat_entityFiltered_2016_CatEntFiltered_7");

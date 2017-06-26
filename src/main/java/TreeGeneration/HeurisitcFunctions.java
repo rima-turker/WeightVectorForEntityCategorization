@@ -171,12 +171,14 @@ public class HeurisitcFunctions
 		int int_entitystartingDepth=  findLevelFirstPathDiscovered(getHmap_testSet(), str_entity);;
 		if (hmap_tfidfCatDeptVal.containsKey(str_catName+Global.str_depthSeparator+str_depth))
 		{
+			//System.out.println(str_entity+"\t"+str_depth+"\t"+str_catName+"\t"+"\t"+hmap_tfidfCatDeptVal.get(str_catName+Global.str_depthSeparator+str_depth)+" "+(double) ((db_Value / Math.pow(2.0,(double) (int_depth-int_entitystartingDepth))))* (double) Math.log10(((this.intTotalEntitiyCount-hmap_tfidfCatDeptVal.get(str_catName+Global.str_depthSeparator+str_depth)) *1.0) / hmap_tfidfCatDeptVal.get(str_catName+Global.str_depthSeparator+str_depth)));
 			return (double) ((db_Value / Math.pow(2.0,(double) (int_depth-int_entitystartingDepth))))* (double) Math.log10(((this.intTotalEntitiyCount-hmap_tfidfCatDeptVal.get(str_catName+Global.str_depthSeparator+str_depth)) *1.0) / hmap_tfidfCatDeptVal.get(str_catName+Global.str_depthSeparator+str_depth));
 		}																							
 		else
 		{
 			System.out.println(str_catName+Global.str_depthSeparator+str_depth);
 			System.err.println("ERROR");
+			System.exit(0);
 			return 0.;
 		}
 	}

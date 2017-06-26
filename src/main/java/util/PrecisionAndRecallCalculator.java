@@ -24,6 +24,7 @@ public class PrecisionAndRecallCalculator
 		{
 			if (hset_goalSet.contains(str_cat)) {
 				int_truePositive += 1;
+				System.out.print("\t"+"TP"+str_cat);
 			}
 			else
 			{
@@ -38,7 +39,7 @@ public class PrecisionAndRecallCalculator
 				//System.out.print("\t"+"FN "+str_cat);
 			}
 		}
-		//System.out.println();
+		System.out.println();
 		if (int_truePositive != 0) {
 			precision = (double)int_truePositive /(double) int_retrievaledElements;
 			recall = (double)int_truePositive / (double)int_relevantElements;

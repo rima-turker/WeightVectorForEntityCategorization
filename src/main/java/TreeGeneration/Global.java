@@ -31,7 +31,7 @@ public class Global
 	
 	final static String goalSetFile_Blog=Global.pathLocal+"GoalSet_Blog.tsv";
 	final static String goalSetFile_Majority=Global.pathLocal+"GoalSet_Majority.tsv";
-	final static String goalSetFile_Uni=Global.pathLocal+"GoalSet_Uni.tsv";
+	final static String goalSetFile_Uni=Global.pathLocal+"GoalSet_Union.tsv";
 	
 	
 	//public static final String str_testFileName = "test_TestSetDistinctPaths.csv";

@@ -8,10 +8,34 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import util.MapUtil;
+
 import java.util.Set;
 
 public class Print 
 {
+	public static <K, V extends Comparable<? super V>> void printTopElementsMap(Map<String,Double> map, int int_topN)
+	{
+		
+		Map<K, V> result = new LinkedHashMap<K, V>();
+		Map<String, Double> hmap_result = new HashMap<>(MapUtil.entriesSortedByValues(map));
+		
+		int count =0;
+		for (Entry <String, Double>   entry: hmap_result.entrySet()) 
+		{
+			System.out.print(entry.getKey()+",");
+			count++;
+			if (count>=int_topN) 
+			{
+				System.out.println();
+				return;
+			}
+		}
+		System.out.println();
+	}
+	
+	
 	public static void printMapOnlyLevel(Map<String, HashMap<String, Double>> mp, String str_depth) {
 		
 		for (Entry<String, HashMap<String, Double>> entry : mp.entrySet()) 
@@ -78,6 +102,8 @@ public class Print
 			
 		}
 	}
+	
+
 	public static void printMapOnlyCats(Map<String, HashMap<String, Double>> mp) {
 		
 		for (Entry<String, HashMap<String, Double>> entry : mp.entrySet()) 

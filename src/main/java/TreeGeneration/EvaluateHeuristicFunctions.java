@@ -45,6 +45,9 @@ public class EvaluateHeuristicFunctions {
 	private Map<String, HashSet<String>> hmap_groundTruthlist ;
 	
 	public static final Map<String, Double> hmap_fmeasureAll = new HashMap<>();
+	public static final  Map<String, Double> hmapPrecisionAll = new HashMap<>();
+	public static final  Map<String, Double> hmapRecallAll = new HashMap<>();
+	
 	public static final Set<Double> hset_fmeasure = new HashSet<>();
 	
 	private Map<String, HashMap<String, Double>> hmap_filteredResults;
@@ -98,15 +101,13 @@ public class EvaluateHeuristicFunctions {
 			
 			final Map<String, HashMap<String, Double>> hmap_addCatValuesTillDepth = aggregateCategoryValues(
 					hmap_heuResult);
-			Print.printMap(hmap_addCatValuesTillDepth);
+			//Print.printMap(hmap_addCatValuesTillDepth);
 			final Map<String, HashMap<String, Double>> hmap_normalizedDepthBased = Normalization
 					.normalize_LevelBased(hmap_addCatValuesTillDepth);
 
 			this.hmap_filteredResults = new HashMap<>(filterHeuResults(hmap_normalizedDepthBased, getThreshold()));
 			calculatePreRcallFscore_levelBased(hmap_filteredResults,getHmap_groundTruthlist());
-			
 		} 
-		
 		catch (Exception e)
 		{
 			// TODO: handle exception
@@ -196,8 +197,9 @@ public class EvaluateHeuristicFunctions {
 				}
 			}
 		}
+		//Print.printHashMapFormated(hmap_resultAddCat);
 		return hmap_resultAddCat;
-		//Print.printMap(hmap_resultAddCat);
+		
 		
 		/*
 		 * Only for sorting
@@ -218,25 +220,6 @@ public class EvaluateHeuristicFunctions {
 	public Map<String, Double> calculatePreRcallFscore_levelBased(
 			final Map<String, HashMap<String, Double>> hmap_filteredEntDepthBased,Map<String, HashSet<String>> hmap_groundTruthlist) throws Exception {
 		
-//		for (Entry<String, HashMap<String, Double>> entry : hmap_filteredEntDepthBased.entrySet()) {
-//			
-//			String str_entityNameAndDepth = entry.getKey();
-//			String str_entityName=str_entityNameAndDepth.split("\t")[0];
-//			String str_depth =str_entityNameAndDepth.split("\t")[1];
-//			//System.out.println(str_entityNameAndDepth);
-//			if (!hmap_groundTruthlist.containsKey(str_entityName)) 
-//			{
-//				System.out.println(str_entityNameAndDepth);
-//				System.out.println("Does not contain");
-//			}
-//			
-//		}
-//		for (Entry<String, HashSet<String>> entry : hmap_groundTruthlist.entrySet()) {
-//			
-//			System.out.println(entry.getKey());
-//		}
-		
-		
 		Map<String, HashMap<String, Double>> hmap_precisionRecall = new HashMap<>();
 		Map<String, Double> hmap_fmeasure = new HashMap<>();
 		int count = 0;
@@ -246,14 +229,9 @@ public class EvaluateHeuristicFunctions {
 			String str_entityNameAndDepth = entry.getKey();
 			String str_entityName=str_entityNameAndDepth.split("\t")[0];
 			String str_depth =str_entityNameAndDepth.split("\t")[1];
+
+			System.out.print(str_entityNameAndDepth+"\t");
 			
-//			if (str_depth.equals("1")) {
-//				System.out.print(str_entityName+"\t"+str_depth);
-//			}
-//			if (str_entityName.contains("joliot-curie")) 
-//			{
-//				System.out.println("Yes");
-//			}
 			if (hmap_groundTruthlist.containsKey(str_entityName))
 			{
 				HashSet<String> hset_temp = new HashSet<>();
@@ -286,10 +264,11 @@ public class EvaluateHeuristicFunctions {
 
 			for (Entry<String, HashMap<String, Double>> entry : hmap_precisionRecall.entrySet()) {
 				String str_entityNameAndDepth = entry.getKey();
-
-				if (Integer.parseInt(str_entityNameAndDepth.substring(
-						str_entityNameAndDepth.indexOf(Global.str_depthSeparator) + Global.str_depthSeparator.length(),
-						str_entityNameAndDepth.length())) == int_depth) {
+				String str_entityName=str_entityNameAndDepth.split("\t")[0];
+				String str_depth =str_entityNameAndDepth.split("\t")[1];
+				
+				if (Integer.parseInt(str_depth) == int_depth) 
+				{
 					int_NumberOfEntities++;
 					HashMap<String, Double> hmap_preRcalFsco = entry.getValue();
 
@@ -302,6 +281,7 @@ public class EvaluateHeuristicFunctions {
 					// "+arr_Rec[int_depth - 1]);
 
 				}
+				
 			}
 			
 			Locale.setDefault(Locale.US);
@@ -309,7 +289,13 @@ public class EvaluateHeuristicFunctions {
 
 			final String averagePrecision = df.format(arr_Pre[int_depth - 1] / int_NumberOfEntities);
 			final String averageRecall = df.format(arr_Rec[int_depth - 1] / int_NumberOfEntities);
-
+			
+			hmapPrecisionAll.put(getHeuristic()+" "+ getThreshold()+" Precision"+Global.str_depthSeparator+int_depth.toString()
+			, Double.valueOf(averagePrecision));
+			
+			hmapRecallAll.put(getHeuristic()+" "+ getThreshold()+" Recall"+Global.str_depthSeparator+int_depth.toString()
+			, Double.valueOf(averageRecall));
+			
 			double averageFScore = 0;
 			if (Double.parseDouble(averageRecall) + Double.parseDouble(averagePrecision) != 0) {
 //				averageFScore = 2 * (Double.parseDouble(averagePrecision) * Double.parseDouble(averageRecall))
@@ -329,9 +315,9 @@ public class EvaluateHeuristicFunctions {
 		str_Rec += "\",\",\")";
 		str_Fsco += "\",\",\")";
 
-//		System.out.println(str_Pre.replace("=SPLIT(\" ,", "=SPLIT(\"Precision ,"));
-//		System.out.println(str_Rec.replace("=SPLIT(\" ,", "=SPLIT(\"Recall ,"));
-//		System.out.println(str_Fsco.replace("=SPLIT(\" ,", "=SPLIT(\"Fmeasure ,"));
+		System.out.println(str_Pre.replace("=SPLIT(\" ,", "=SPLIT(\"Precision ,"));
+		System.out.println(str_Rec.replace("=SPLIT(\" ,", "=SPLIT(\"Recall ,"));
+		System.out.println(str_Fsco.replace("=SPLIT(\" ,", "=SPLIT(\"Fmeasure ,"));
 		
 		return hmap_fmeasure;
 	}
@@ -471,7 +457,7 @@ public class EvaluateHeuristicFunctions {
 
 	public static Map<String, HashMap<String, Double>> filterHeuResults(
 			Map<String, HashMap<String, Double>> hmap_normalizedDepthBased, Double threshold) {
-
+		//Print.printHashMapFormated(hmap_normalizedDepthBased);
 		Map<String, HashMap<String, Double>> hmap_resultNormalizedFiltered = new LinkedHashMap<>();
 		int int_catNumberBeforeFilter = 0;
 		int int_catNumberFiltered = 0;
@@ -743,7 +729,9 @@ public class EvaluateHeuristicFunctions {
 	public Map<String, HashMap<String, Double>> getHmap_testSetDistinctPaths() {
 		return hmap_testSetDistinctPaths;
 	}
-
+	public Map<String, Double> getHmapPrecisionAll() {
+		return hmapPrecisionAll;
+	}
 
 
 
