@@ -230,7 +230,7 @@ public class EvaluateHeuristicFunctions {
 			String str_entityName=str_entityNameAndDepth.split("\t")[0];
 			String str_depth =str_entityNameAndDepth.split("\t")[1];
 
-			System.out.print(str_entityNameAndDepth+"\t");
+		//	System.out.print(str_entityNameAndDepth+"\t");
 			
 			if (hmap_groundTruthlist.containsKey(str_entityName))
 			{

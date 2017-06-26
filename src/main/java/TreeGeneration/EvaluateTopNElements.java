@@ -16,10 +16,12 @@ public class EvaluateTopNElements
 	private int topN;
 	//private Map<String, Double> map;
 	private String pathMainFile;
-	public EvaluateTopNElements(int n, String pathMainFile )
+	private HeuristicType heuristic;
+	public EvaluateTopNElements(int n, String pathMainFile, HeuristicType heuristic )
 	{
 		this.topN=n;
 		this.pathMainFile = pathMainFile;
+		this.heuristic = heuristic;
 	}
 	public void calculatePrecisionAndRecallForTopN()
 	{
@@ -31,13 +33,13 @@ public class EvaluateTopNElements
 
 		ArrayList<String> filePaths = new ArrayList<>();
 		filePaths.add(pathGTBlog);
-//		filePaths.add(pathGTMaj);
-//		filePaths.add(pathGTUni);
+		filePaths.add(pathGTMaj);
+		filePaths.add(pathGTUni);
 		try 
 		{
 			final Map<String, HashMap<String, Double>>  maptestSet = new HashMap<String, HashMap<String,Double>>(WriteReadFromFile
 					.readTestSet_tab(pathMainFile));
-			HeurisitcFunctions heurisitcFun = new HeurisitcFunctions(maptestSet, HeuristicType.HEURISTIC_COMBINATION4TH5TH,
+			HeurisitcFunctions heurisitcFun = new HeurisitcFunctions(maptestSet, heuristic,
 					maptestSet.size()/Global.levelOfTheTree);
 			final Map<String, HashMap<String, Double>> mapEntCatAndVal = new LinkedHashMap<>(heurisitcFun.callHeuristic());
 			

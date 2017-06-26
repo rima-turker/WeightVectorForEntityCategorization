@@ -22,7 +22,7 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 		
-		new CreateWeightVector(Global.pathServer+"article_cats2016_7_DistinctPaths_formated_", 0.07, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
+	//	new CreateWeightVector(Global.pathServer+"article_cats2016_7_DistinctPaths_formated_", 0.07, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
 		
 		
 		//0-CategoryTrees_2016 //1-MainCategoryFile //2-article_categories_clean2016 //3-
@@ -123,19 +123,23 @@ public class Main {
 		
 //		WriteReadFromFile.writeMapToAFile(ReadResultsFromFilteredFiles.readAndCreateMapDistinctPaths(args[3]),"article_cats2016_7_DistinctPaths");
 		
+		for (Global.HeuristicType heu : Global.HeuristicType.values()) 
+	{
 		
+		System.err.println("HEURISTIC "+heu);	
 		ArrayList<Integer> arrList = new ArrayList<>();
 		arrList.add(10);
-//		arrList.add(3);
-//		arrList.add(5);
+		arrList.add(3);
+		arrList.add(5);
+		arrList.add(1);
 		
 		for (int i = 0; i < arrList.size(); i++) 
 		{
 			System.out.println("Top "+ arrList.get(i) +" elements");
-			EvaluateTopNElements evaTopN = new EvaluateTopNElements(arrList.get(i), Global.pathTestFile_tab);
+			EvaluateTopNElements evaTopN = new EvaluateTopNElements(arrList.get(i), Global.pathTestFile_tab,heu);
 			evaTopN.calculatePrecisionAndRecallForTopN();
 		}
-		
+	}
 		
 //		CompareTwoFiles.compareTwoFiles(Global.pathLocal+"PageLinks_EntityCatFiltered_7", Global.pathLocal+"article_Cat_entityFiltered_2016_CatEntFiltered_7");
 		
