@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -14,8 +16,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -58,9 +63,6 @@ public class WriteReadFromFile
 						{
 							System.out.println(str);
 						}
-							
-						
-						
 					}
 					
 				}
@@ -233,6 +235,138 @@ public class WriteReadFromFile
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static void writeSetFile(HashSet<String> set,String strFileName) 
+	{
+		try {
+			
+			File file =(new File(strFileName));
+			
+			file.createNewFile();
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
+			for(String str : set)
+			{
+				bufferedWriter.write(str);
+				bufferedWriter.newLine();
+			}
+			bufferedWriter.close();
+			System.out.println("Finished Writing to a file: "+file.getName()+" "+file.getAbsolutePath());
+		} 
+		catch (IOException e) 
+		{
+				e.printStackTrace();
+		}
+		
+	}
+	
+	public static void writeSetFile_db(HashSet<Double> set,String strFileName) 
+	{
+		try {
+			
+			File file =(new File(strFileName));
+			
+			file.createNewFile();
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
+			for(Double db : set)
+			{
+				bufferedWriter.write(String.valueOf(db));
+				bufferedWriter.newLine();
+			}
+			bufferedWriter.close();
+			System.out.println("Finished Writing to a file: "+file.getName()+" "+file.getAbsolutePath());
+		} 
+		catch (IOException e) 
+		{
+				e.printStackTrace();
+		}
+		
+	}
+	public static HashSet<String> formatForWeightVector(Map<String, HashMap<String, Double>> mapToFormat)
+	{
+		//<$100_Film_Festival>      < 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,0 ,0 ,0 ,0 ,0 ,0>
+		//String line= "albert_einstein	7={chemistry=0.05945411586914874, politics=1.6804591596553597, transport=0.103678303083399, history=0.7341221734991089, engineering=0.4063858979926278, philosophy=2.9891100754301267, literature=0.46382888130830713, economics=0.3486273820841701, psychology=0.6903195854275956, communication=0.024007225726569038, arts=0.44858320162873133, architecture=0.10931021437959335, physics=8.117516056507183, outer_space=0.3771555550903578, mathematics=0.2757756240130567, inventions=2.8424083313936026, photography=3.5235875870740054}";
+		//<albert_einstein>	<0.0 ,0.10931 ,0.44858 ,0.0 ,0.0 ,0.0 ,0.0 ,0.0 ,0.05945 ,0.0 ,0.02401 ,0.0 ,0.34863 ,0.0 ,0.40639 ,0.0 ,0.0 ,0.73412 ,2.84241 ,0.46383 ,0.27578 ,0.0 ,0.0 ,0.37716 ,0.0 ,2.98911 ,3.52359 ,8.11752 ,0.0 ,1.68046 ,0.0 ,0.69032 ,0.10368 ,0.0 ,0.0>
+		HashSet<String> setResult = new HashSet<>();
+//		String entityName = line.split("\t")[0];
+//		String[]  strCats = line.split("\t")[1].replace("7={", "").replace("}", "").replaceAll(" ", "").split(",");
+		Map<String, Integer> mapCat= new LinkedHashMap<>();
+		
+		try {
+			String line = null;
+			int i =0;
+			BufferedReader br_MainFile = new BufferedReader(new FileReader(Global.strPathMainCat));
+			while ((line = br_MainFile.readLine()) != null) 
+			{
+				line= line.toLowerCase();
+				mapCat.put(line.replaceAll(">", ""), i);
+				i++;
+			}
+			
+			String[] result =  new String [mapCat.size()];
+			for (int j = 0; j < result.length; j++)
+			{
+				result[j]="0";
+			}
+			
+			for (Entry<String, HashMap<String, Double>> entry : mapToFormat.entrySet()) {
+				
+				String str_entityNameAndDepth = entry.getKey();
+				String str_entityName=str_entityNameAndDepth.split("\t")[0];
+				String str_depth =str_entityNameAndDepth.split("\t")[1];
+				
+				final Map<String, Double> lhmap_catAnVal = new HashMap<>(entry.getValue());
+
+				for (final Entry<String, Double> entry_cat : lhmap_catAnVal.entrySet()) 
+				{
+					result[mapCat.get(entry_cat.getKey())] = String.valueOf(entry_cat.getValue());
+				}
+				
+				Locale.setDefault(Locale.US);
+				DecimalFormat df = new DecimalFormat("0.00000");
+				
+				String wv= "<"+str_entityName+">"+"\t"+"<";
+				
+				
+				for (int j = 0; j < result.length; j++) 
+				{
+					
+					double val = Double.valueOf(result[j]);
+					String strformated = String.valueOf(val);
+					if (val>0) 
+					{
+						strformated = df.format(val);
+					}
+					wv+=strformated+" ,";
+					//System.out.print(strformated+" ,");
+				}
+				
+				wv+=">";
+				wv=wv.replace(" ,>", ">");
+				System.out.println();
+				setResult.add(wv);
+				System.out.println(wv);
+				
+			}
+			System.out.println("Size of the WV(total entity Count) "+ setResult.size());
+//			for (Entry<String, Integer> entry:mapCat.entrySet()) 
+//			{
+//				System.out.println(entry.getKey()+" " +entry.getValue());
+//			}
+//			for (int j = 0; j < strCats.length; j++) 
+//			{
+//				String[] cat = strCats[j].split("=");
+//				result[mapCat.get(cat[0])] =cat[1]; 
+//			}
+			
+			
+		
+			br_MainFile.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return setResult;
 	}
 	public static void formatMapFile(String str_fileName, String pathResultFile) 
 	{

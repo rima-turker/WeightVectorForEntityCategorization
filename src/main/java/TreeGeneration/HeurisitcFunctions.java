@@ -172,7 +172,18 @@ public class HeurisitcFunctions
 		if (hmap_tfidfCatDeptVal.containsKey(str_catName+Global.str_depthSeparator+str_depth))
 		{
 			//System.out.println(str_entity+"\t"+str_depth+"\t"+str_catName+"\t"+"\t"+hmap_tfidfCatDeptVal.get(str_catName+Global.str_depthSeparator+str_depth)+" "+(double) ((db_Value / Math.pow(2.0,(double) (int_depth-int_entitystartingDepth))))* (double) Math.log10(((this.intTotalEntitiyCount-hmap_tfidfCatDeptVal.get(str_catName+Global.str_depthSeparator+str_depth)) *1.0) / hmap_tfidfCatDeptVal.get(str_catName+Global.str_depthSeparator+str_depth)));
-			return (double) ((db_Value / Math.pow(2.0,(double) (int_depth-int_entitystartingDepth))))* (double) Math.log10(((this.intTotalEntitiyCount-hmap_tfidfCatDeptVal.get(str_catName+Global.str_depthSeparator+str_depth)) *1.0) / hmap_tfidfCatDeptVal.get(str_catName+Global.str_depthSeparator+str_depth));
+			double result = (double) ((db_Value / Math.pow(2.0,(double) (int_depth-int_entitystartingDepth))))* (double) Math.log10(((this.intTotalEntitiyCount) *1.0) / hmap_tfidfCatDeptVal.get(str_catName+Global.str_depthSeparator+str_depth));
+			
+			//double result = (double) ((db_Value / Math.pow(2.0,(double) (int_depth-int_entitystartingDepth))))* (double) Math.log10(((this.intTotalEntitiyCount-hmap_tfidfCatDeptVal.get(str_catName+Global.str_depthSeparator+str_depth)) *1.0) / hmap_tfidfCatDeptVal.get(str_catName+Global.str_depthSeparator+str_depth));
+			if (result<0) 
+			{
+				//System.out.println(result);
+				result= result*(-1);
+				System.out.println(result);
+			}
+			return result;
+			
+			//return result;
 		}																							
 		else
 		{

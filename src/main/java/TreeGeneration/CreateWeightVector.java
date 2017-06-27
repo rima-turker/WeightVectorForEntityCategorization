@@ -31,18 +31,19 @@ import util.Statistics;
 
 public class CreateWeightVector 
 {
-	private double threshold;
+	private int depth;
 	private  Global.HeuristicType heuristic;
 	private String strFileDistinctPaths;
 	
 	private static final Logger LOG = Logger.getLogger(EvaluateHeuristicFunctions.class.getCanonicalName());
 	
 	public CreateWeightVector(final String strFileDistinct,
-			final Double db_threshold, final Global.HeuristicType heu)
+			final int depth, final Global.HeuristicType heu)
 	{
+		System.out.println("Constactor start");
 		this.heuristic= heu;
 		this.strFileDistinctPaths=strFileDistinct;
-		this.threshold = db_threshold;
+		this.depth = depth;
 		
 	}
 	public void main() throws Exception {
@@ -74,16 +75,20 @@ public class CreateWeightVector
 		
 		System.out.println("finished aggregateCategoryValues "+  " size" + hmap_addCatValuesTillDepth.size());
 		
-		Map<String, HashMap<String, Double>> mapAggregatedTillDepth= new HashMap<>(MapUtil.getAsMapCertainLevel(7,hmap_addCatValuesTillDepth));
+		Map<String, HashMap<String, Double>> mapAggregatedTillDepth= new HashMap<>(MapUtil.getAsMapCertainLevel(depth,hmap_addCatValuesTillDepth));
 		
-		System.out.println("Only 7th layer size "+ mapAggregatedTillDepth.size());
+		System.out.println("Only"+ depth +" layer size "+ mapAggregatedTillDepth.size());
 		
-		WriteReadFromFile.writeMapToAFile(mapAggregatedTillDepth,Global.pathServer+"article_cat2016_WV");
+//		WriteReadFromFile.writeSetFile(WriteReadFromFile.formatForWeightVector(mapAggregatedTillDepth), Global.pathServer+"_WeighVectorFormated");
+		
+//		WriteReadFromFile.writeMapToAFile(mapAggregatedTillDepth,Global.pathServer+"article_cat2016_WV_"+depth+"_NotNormalized");
 //		Print.printMap(mapAggregatedTillDepth);
 //		System.out.println("Finished writing");
 		
-//		final Map<String, HashMap<String, Double>> hmap_normalizedDepthBased = Normalization
-//				.normalize_LevelBased(mapAggregatedTillDepth);
+		final Map<String, HashMap<String, Double>> hmap_normalizedDepthBased = Normalization
+				.normalize_LevelBased(mapAggregatedTillDepth);
+//		
+//		WriteReadFromFile.writeMapToAFile(hmap_normalizedDepthBased,Global.pathServer+"article_cat2016_WV_"+depth+"_Normalized");
 //		
 ////		final Map<String, HashMap<String, Double>> hmap_normalizedDepthBased = Normalization
 ////				.normalize_LevelBased(hmap_addCatValuesTillDepth);
@@ -285,12 +290,6 @@ public class CreateWeightVector
 			int_count++;
 		}
 		System.out.println("Entities are tested:" + int_count);
-	}
-
-	
-
-	public double getThreshold() {
-		return threshold;
 	}
 
 	public Global.HeuristicType getHeuristic() {

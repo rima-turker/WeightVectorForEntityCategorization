@@ -8,9 +8,80 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import TreeGeneration.Global;
+import TreeGeneration.WriteReadFromFile;
 
 public class Normalization 
 {
+	
+	public static Map<String, HashMap<String, Double>>  normalize_LevelBasedMeanAndDeviation(Map<String, HashMap<String, Double>> hmap_addCatValuesTillDepth) 
+	{
+		Map<String, HashMap<String, Double>> hmap_heuResultNormalized = new LinkedHashMap<>();
+		for (Integer i = 1; i <= Global.levelOfTheTree; i++) 
+		{
+			HashSet<Double> hset_levelallValues= new HashSet<>();
+			for (Entry<String, HashMap<String, Double>> entry :hmap_addCatValuesTillDepth.entrySet()) 
+			{
+				if (entry.getKey().contains(Global.str_depthSeparator+i.toString())) 
+				{
+					HashMap<String, Double> hmap_entAndCat = new HashMap<>(entry.getValue());
+					
+					hset_levelallValues.addAll(hmap_entAndCat.values());
+					
+				}
+			}
+			Double[] arr = new Double[hset_levelallValues.size()];
+			arr = hset_levelallValues.toArray(arr);
+			Statistics stat = new Statistics(arr);
+			Double mean = stat.getMean();
+			Double std = stat.getStdDev();
+			Double var= stat.getVariance();
+			if (i==6) 
+			{
+				System.out.println("Max Value: "+Collections.max(hset_levelallValues));
+				System.out.println("Min Value: "+Collections.min(hset_levelallValues));
+				
+				System.out.println("Mean Value "+mean);
+				System.out.println("Standard Daviation  "+std);
+				System.out.println("Variance "+var);
+			}
+			if (!hset_levelallValues.isEmpty()) 
+			{
+				
+				Double max = Collections.max(hset_levelallValues);
+				//System.out.println(i.toString()+":"+max);
+				for (Entry<String, HashMap<String, Double>> entry :hmap_addCatValuesTillDepth.entrySet()) 
+				{
+					if (entry.getKey().contains(Global.str_depthSeparator+i.toString())) 
+					{
+						HashMap<String, Double> hmap_CatAndVal = new HashMap<>(entry.getValue());
+						
+						HashMap<String, Double> hmap_resultCatAndVal= new LinkedHashMap<>();
+						
+						for (Entry<String, Double> entry_CatAndVal :hmap_CatAndVal.entrySet()) 
+						{
+							hmap_resultCatAndVal.put(entry_CatAndVal.getKey(), (double)(entry_CatAndVal.getValue()/max));
+						}
+						
+						hmap_heuResultNormalized.put(entry.getKey(), hmap_resultCatAndVal);
+					}
+				}
+			}
+			else
+			{
+				int count=0;
+				for (Entry<String, HashMap<String, Double>> entry :hmap_addCatValuesTillDepth.entrySet()) 
+				{
+					if (entry.getKey().contains(Global.str_depthSeparator+i.toString())) 
+					{
+						hmap_heuResultNormalized.put(entry.getKey(), entry.getValue());
+						count++;
+					}
+				}
+			}
+		}
+		return hmap_heuResultNormalized;
+	}
+	
 	public static Map<String, HashMap<String, Double>>  normalize_LevelBased(Map<String, HashMap<String, Double>> hmap_addCatValuesTillDepth) 
 	{
 		Map<String, HashMap<String, Double>> hmap_heuResultNormalized = new LinkedHashMap<>();
@@ -24,7 +95,21 @@ public class Normalization
 					HashMap<String, Double> hmap_entAndCat = new HashMap<>(entry.getValue());
 					
 					hset_levelallValues.addAll(hmap_entAndCat.values());
+					
 				}
+			}
+			
+			if (i==6) 
+			{
+				System.out.println("Max Value: "+Collections.max(hset_levelallValues));
+				System.out.println("Min Value: "+Collections.min(hset_levelallValues));
+				Double[] arr = new Double[hset_levelallValues.size()];
+				arr = hset_levelallValues.toArray(arr);
+				Statistics stat = new Statistics(arr);
+				System.out.println("Mean Value "+stat.getMean());
+				System.out.println("Standard Daviation  "+stat.getStdDev());
+				System.out.println("Variance "+stat.getVariance());
+				WriteReadFromFile.writeSetFile_db(hset_levelallValues,"AllNumbersAtLevel_6"); 
 			}
 			if (!hset_levelallValues.isEmpty()) 
 			{

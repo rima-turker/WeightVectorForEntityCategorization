@@ -22,9 +22,13 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 		
-	//	new CreateWeightVector(Global.pathServer+"article_cats2016_7_DistinctPaths_formated_", 0.07, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
+		new CreateWeightVector(Global.pathTestFile_tab,6, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
 		
 		
+		
+//		new CreateWeightVector(Global.pathServer+"article_cats2016_7_DistinctPaths_formated_",6, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
+		
+		//WriteReadFromFile.formatForWeightVector();
 		//0-CategoryTrees_2016 //1-MainCategoryFile //2-article_categories_clean2016 //3-
 		
 
@@ -53,8 +57,8 @@ public class Main {
 		
 //		final String goalSetFile=Global.pathLocal+"GoalSet_Majority.tsv"; //0.7257379773936717 
 //		
-////		final String goalSetFile=Global.pathLocal+"GoalSet_Blog.tsv";
-////		final String goalSetFile=Global.pathLocal+"GoalSet_Uni.tsv"; // 0.7108394111399493
+		final String goalSetFile=Global.pathLocal+"GoalSet_Blog.tsv";
+//		final String goalSetFile=Global.pathLocal+"GoalSet_Uni.tsv"; // 0.7108394111399493
 //	
 //		new CreateWeightVector(Global.pathTestFile_tab, 0.07, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
 //		
@@ -64,7 +68,7 @@ public class Main {
 //		for (Global.HeuristicType heu : Global.HeuristicType.values()) 
 //		{
 //		    //System.out.println("heuristic function"+ heu); 
-//			EvaluateHeuristicFunctions eva = new EvaluateHeuristicFunctions(goalSetFile, Global.pathTestFile_tab, the, heu);
+//			EvaluateHeuristicFunctions eva = new EvaluateHeuristicFunctions(goalSetFile, Global.pathTestFile_tab, the, HeuristicType.HEURISTIC_COMBINATION4TH5TH);
 //			eva.main();
 //		}
 //	}
@@ -73,9 +77,10 @@ public class Main {
 //		int count =0;
 //		for (Entry <String, Double>   entry: hmap_fmeasure.entrySet()) 
 //		{
-//			System.out.println(goalSetFile+" "+entry.getKey()+" "+entry.getValue());
+//			//System.out.println(goalSetFile+" "+entry.getKey()+" "+entry.getValue());
+//			System.out.println(entry.getKey()+" "+entry.getValue());
 //			count++;
-//			if (count==50) 
+//			if (count==70) 
 //			{
 //				break;
 //			}
@@ -123,23 +128,23 @@ public class Main {
 		
 //		WriteReadFromFile.writeMapToAFile(ReadResultsFromFilteredFiles.readAndCreateMapDistinctPaths(args[3]),"article_cats2016_7_DistinctPaths");
 		
-		for (Global.HeuristicType heu : Global.HeuristicType.values()) 
-	{
-		
-		System.err.println("HEURISTIC "+heu);	
-		ArrayList<Integer> arrList = new ArrayList<>();
-		arrList.add(10);
-		arrList.add(3);
-		arrList.add(5);
-		arrList.add(1);
-		
-		for (int i = 0; i < arrList.size(); i++) 
-		{
-			System.out.println("Top "+ arrList.get(i) +" elements");
-			EvaluateTopNElements evaTopN = new EvaluateTopNElements(arrList.get(i), Global.pathTestFile_tab,heu);
-			evaTopN.calculatePrecisionAndRecallForTopN();
-		}
-	}
+//		for (Global.HeuristicType heu : Global.HeuristicType.values()) 
+//	{
+//		
+//		System.out.println("HEURISTIC "+heu);	
+//		ArrayList<Integer> arrList = new ArrayList<>();
+//		arrList.add(10);
+//		arrList.add(5);
+//		arrList.add(3);
+//		arrList.add(1);
+//		
+//		for (int i = 0; i < arrList.size(); i++) 
+//		{
+//			System.out.println("Top "+ arrList.get(i) +" elements");
+//			EvaluateTopNElements evaTopN = new EvaluateTopNElements(arrList.get(i), Global.pathTestFile_tab,heu);
+//			evaTopN.calculatePrecisionAndRecallForTopN();
+//		}
+//	}
 		
 //		CompareTwoFiles.compareTwoFiles(Global.pathLocal+"PageLinks_EntityCatFiltered_7", Global.pathLocal+"article_Cat_entityFiltered_2016_CatEntFiltered_7");
 		

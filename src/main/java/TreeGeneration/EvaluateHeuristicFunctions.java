@@ -101,7 +101,7 @@ public class EvaluateHeuristicFunctions {
 			
 			final Map<String, HashMap<String, Double>> hmap_addCatValuesTillDepth = aggregateCategoryValues(
 					hmap_heuResult);
-			//Print.printMap(hmap_addCatValuesTillDepth);
+			Print.printMap(hmap_addCatValuesTillDepth);
 			final Map<String, HashMap<String, Double>> hmap_normalizedDepthBased = Normalization
 					.normalize_LevelBased(hmap_addCatValuesTillDepth);
 
