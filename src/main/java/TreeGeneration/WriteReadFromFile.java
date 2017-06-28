@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -45,24 +46,72 @@ public class WriteReadFromFile
 							new InputStreamReader(zf.getInputStream(ze)));
 
 						HashSet<String> hsetResult = new HashSet<>();
-						
+					    List<Double> arrList = new ArrayList<>();
+						int count =0;
 						String lineMain;
 						while ((lineMain = br_mainFile.readLine()) != null) 
 						{
-							
-							if (lineMain.split(" ")[0].equals("Albert_Einstein>")) 
+							//count++;
+							//System.out.println(lineMain);
+							String prolineMain = lineMain.substring(lineMain.indexOf("6={")+("6={").length()).replaceAll("}", "");
+							if (prolineMain.length()>1) 
 							{
-								hsetResult.add(lineMain);
+								String[] split = prolineMain.split(", ");
+							
+								for (int i = 0; i < split.length; i++)
+								{
+									//hsetResult.add(split[i].split("=")[1]);
+									//System.out.println(split[i].split("=")[1]);
+									arrList.add(Double.parseDouble(split[i].split("=")[1]));
+								}
+							}
+							else
+							{
+								//System.out.println(lineMain);
+								count++;
 							}
 							
+							
+							
+							
+//							if (lineMain.split(" ")[0].equals("Albert_Einstein>")) 
+//							{
+//								hsetResult.add(lineMain);
+//							}
+							
 						}
-						System.out.println("size"+hsetResult.size());
+						//System.out.println("size"+hsetResult.size());
+						System.out.println("size "+arrList.size());
+						System.out.println("Count empty entities: "+ count);
+						double[] target = new double[arrList.size()];
+						 for (int i = 0; i < target.length; i++) {
+						    target[i] = arrList.get(i);                // java 1.5+ style (outboxing)
+						 }
+						
+						
+						double threshold = FindQuartile.findOutliers(target);
+						
+						long positive = 0;
+						long negative = 0;
+						for (int i = 0; i < target.length; i++) {
+						    if(target[i]<=threshold) {
+						    	positive++;
+						    }else {
+						    	negative++;
+						    }
+						 }
+						
+						
+						double keepPercentage = (100.*positive/target.length);
+						
+						System.out.println("keep percenatge "+keepPercentage);
+						System.out.println("remove percenatge "+(100- keepPercentage));
 						br_mainFile.close();
 						
-						for (String str : hsetResult) 
-						{
-							System.out.println(str);
-						}
+//						for (String str : hsetResult) 
+//						{
+//							System.out.println(str);
+//						}
 					}
 					
 				}
@@ -75,7 +124,6 @@ public class WriteReadFromFile
 	System.out.println ("MainLoop: "+(end.getTime() - start.getTime())/1000 + " seconds");
 
 }	
-	
 	
 	public static Map<String, HashSet<String>> readFileToMap(String fileName) {
 		

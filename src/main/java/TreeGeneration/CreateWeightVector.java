@@ -46,6 +46,10 @@ public class CreateWeightVector
 		this.depth = depth;
 		
 	}
+	public CreateWeightVector()
+	{
+		
+	}
 	public void main() throws Exception {
 		
 		/*

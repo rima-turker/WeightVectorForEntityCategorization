@@ -30,7 +30,7 @@ public class HeurisitcFunctions
 
 		Map<String, HashMap<String, Double>> hmap_heuResult = new LinkedHashMap<>();
 		Map<String, Integer> hmap_tfidfCatDeptVal = new HashMap<>(initializeMapForTFIDF(hmap_testSet));
-		
+		//Print.printMap(hmap_tfidfCatDeptVal);
 		for (Entry<String, HashMap<String, Double>> entry : hmap_testSet.entrySet()) {
 			String str_entityNameAndDepth = entry.getKey();
 			String str_entityName=str_entityNameAndDepth.split("\t")[0];

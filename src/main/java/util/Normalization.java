@@ -1,12 +1,15 @@
 package util;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import TreeGeneration.FindQuartile;
 import TreeGeneration.Global;
 import TreeGeneration.WriteReadFromFile;
 
@@ -82,6 +85,93 @@ public class Normalization
 		return hmap_heuResultNormalized;
 	}
 	
+	public static Map<String, HashMap<String, Double>>  normalize_LevelBased_Mary(Map<String, HashMap<String, Double>> mapAggregatedTillDepth,int depth) 
+	{
+		
+		Map<String, HashMap<String, Double>> mapResultNormalized = new LinkedHashMap<>();
+		ArrayList<Double> arrList = new ArrayList<>();
+			//HashSet<Double> hset_levelallValues= new HashSet<>();
+		for (Entry<String, HashMap<String, Double>> entry :mapAggregatedTillDepth.entrySet()) 
+		{
+			HashMap<String, Double> hmap_entAndCat = new HashMap<>(entry.getValue());
+			for (Double db :hmap_entAndCat.values()) 
+			{
+				arrList.add(db);
+			}
+		}
+		
+		double[] target = new double[arrList.size()];
+		 for (int i = 0; i < target.length; i++) {
+		    target[i] = arrList.get(i);                // java 1.5+ style (outboxing)
+		 }
+		 
+		 double threshold = FindQuartile.findOutliers(target);
+			
+			long positive = 0;
+			long negative = 0;
+			for (int i = 0; i < target.length; i++) {
+			    if(target[i]<=threshold) {
+			    	positive++;
+			    }else {
+			    	negative++;
+			    }
+			 }
+			
+			
+			double keepPercentage = (100.*positive/target.length);
+			
+			System.out.println("keep percenatge "+keepPercentage);
+			System.out.println("remove percentage "+(100- keepPercentage));
+//			
+//			
+//			
+//			
+//				/*
+//				 * Here find the value
+//				 */
+//				Double max = Collections.max(hset_levelallValues);
+//				//System.out.println(i.toString()+":"+max);
+//				for (Entry<String, HashMap<String, Double>> entry :mapAggregatedTillDepth.entrySet()) 
+//				{
+//					if (entry.getKey().contains(Global.str_depthSeparator+depth)) 
+//					{
+//						HashMap<String, Double> hmap_CatAndVal = new HashMap<>(entry.getValue());
+//						
+//						HashMap<String, Double> hmap_resultCatAndVal= new LinkedHashMap<>();
+//						
+//						for (Entry<String, Double> entry_CatAndVal :hmap_CatAndVal.entrySet()) 
+//						{
+//							if (entry_CatAndVal.getValue()>max) 
+//							{
+//								hmap_resultCatAndVal.put(entry_CatAndVal.getKey(), (double)max);
+//							}
+//							else
+//							{
+//								hmap_resultCatAndVal.put(entry_CatAndVal.getKey(), (entry_CatAndVal.getValue()));
+//							}
+//							
+//							
+//						}
+//						
+//						mapResultNormalized.put(entry.getKey(), hmap_resultCatAndVal);
+//					}
+//				}
+//			}
+//			else
+//			{
+//				int count=0;
+//				for (Entry<String, HashMap<String, Double>> entry :mapAggregatedTillDepth.entrySet()) 
+//				{
+//					if (entry.getKey().contains(Global.str_depthSeparator+depth)) 
+//					{
+//						mapResultNormalized.put(entry.getKey(), entry.getValue());
+//						count++;
+//					}
+//				}
+//			}
+		
+		return mapResultNormalized;
+	}
 	public static Map<String, HashMap<String, Double>>  normalize_LevelBased(Map<String, HashMap<String, Double>> hmap_addCatValuesTillDepth) 
 	{
 		Map<String, HashMap<String, Double>> hmap_heuResultNormalized = new LinkedHashMap<>();
@@ -105,11 +195,18 @@ public class Normalization
 				System.out.println("Min Value: "+Collections.min(hset_levelallValues));
 				Double[] arr = new Double[hset_levelallValues.size()];
 				arr = hset_levelallValues.toArray(arr);
-				Statistics stat = new Statistics(arr);
-				System.out.println("Mean Value "+stat.getMean());
-				System.out.println("Standard Daviation  "+stat.getStdDev());
-				System.out.println("Variance "+stat.getVariance());
-				WriteReadFromFile.writeSetFile_db(hset_levelallValues,"AllNumbersAtLevel_6"); 
+				double[] dbArr = new double[hset_levelallValues.size()];
+				for (int j = 0; j < dbArr.length; j++) 
+				{
+					dbArr[j]=arr[j];
+				}
+				FindQuartile fq = new FindQuartile();
+				fq.findOutliers(dbArr);
+//				Statistics stat = new Statistics(arr);
+//				System.out.println("Mean Value "+stat.getMean());
+//				System.out.println("Standard Daviation  "+stat.getStdDev());
+//				System.out.println("Variance "+stat.getVariance());
+//				WriteReadFromFile.writeSetFile_db(hset_levelallValues,"AllNumbersAtLevel_6"); 
 			}
 			if (!hset_levelallValues.isEmpty()) 
 			{
