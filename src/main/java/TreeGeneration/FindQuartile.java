@@ -10,8 +10,8 @@ public class FindQuartile {
 		final double q1 = da.getPercentile(25);
 		double iqr = q3 - q1;
 
-		//System.out.println("Q3 = "+q3+" "+" Q1 = "+q1 );
-		//System.out.println("Inter quartl "+iqr);
+		System.out.println("Q3 = "+q3+" "+" Q1 = "+q1 );
+		System.out.println("Inter quartl "+iqr);
 		//System.out.println("iqr*1.5 = "+ iqr*1.5);
 		final double t = q3+iqr*1.5;
 		System.out.println("Thresold "+t);

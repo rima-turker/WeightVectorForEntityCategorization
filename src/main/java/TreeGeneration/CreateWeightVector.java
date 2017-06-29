@@ -72,28 +72,31 @@ public class CreateWeightVector
 ////		
 		final Map<String, HashMap<String, Double>> hmap_heuResult = new HashMap<>(heurisitcFun.callHeuristic());
 	
-		System.out.println("finished heuristic Function "+  " size" + hmap_heuResult.size());
+//		WriteReadFromFile.writeMapToAFile(hmap_heuResult, "articleCategory2016_HeusristicResults");
 //		
 		final Map<String, HashMap<String, Double>> hmap_addCatValuesTillDepth = aggregateCategoryValues(
 				hmap_heuResult);
+		
+//		WriteReadFromFile.writeMapToAFile(hmap_addCatValuesTillDepth, "articleCategory2016_AggregatedResults");
 		
 		System.out.println("finished aggregateCategoryValues "+  " size" + hmap_addCatValuesTillDepth.size());
 		
 		Map<String, HashMap<String, Double>> mapAggregatedTillDepth= new HashMap<>(MapUtil.getAsMapCertainLevel(depth,hmap_addCatValuesTillDepth));
 		
+		
 		System.out.println("Only"+ depth +" layer size "+ mapAggregatedTillDepth.size());
 		
 //		WriteReadFromFile.writeSetFile(WriteReadFromFile.formatForWeightVector(mapAggregatedTillDepth), Global.pathServer+"_WeighVectorFormated");
 		
-//		WriteReadFromFile.writeMapToAFile(mapAggregatedTillDepth,Global.pathServer+"article_cat2016_WV_"+depth+"_NotNormalized");
+		WriteReadFromFile.writeMapToAFile(mapAggregatedTillDepth,Global.pathServer+"article_cat2016_WV_"+depth+"_NotNormalized");
 //		Print.printMap(mapAggregatedTillDepth);
 //		System.out.println("Finished writing");
 		
 		final Map<String, HashMap<String, Double>> hmap_normalizedDepthBased = Normalization
-				.normalize_LevelBased(mapAggregatedTillDepth);
+				.normalize_LevelBased_Mary(mapAggregatedTillDepth,depth);
 //		
-//		WriteReadFromFile.writeMapToAFile(hmap_normalizedDepthBased,Global.pathServer+"article_cat2016_WV_"+depth+"_Normalized");
-//		
+		WriteReadFromFile.writeMapToAFile(hmap_normalizedDepthBased,Global.pathServer+"article_cat2016_WV_"+depth+"_Normalized");
+		
 ////		final Map<String, HashMap<String, Double>> hmap_normalizedDepthBased = Normalization
 ////				.normalize_LevelBased(hmap_addCatValuesTillDepth);
 ////		
@@ -103,7 +106,7 @@ public class CreateWeightVector
 //		System.out.println("finished filtering "+  " size" + hmap_filteredResults.size());
 //		
 		//WriteReadFromFile.writeMapToAFile(hmap_filteredResults, "MapFormatedWeightVector_7");
-		
+		WriteReadFromFile.formatForWeightVector(hmap_normalizedDepthBased);
 		System.out.println("Finished");
 
 	}

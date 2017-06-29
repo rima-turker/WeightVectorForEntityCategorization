@@ -13,12 +13,16 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		
-		startCalculationAfterHeuristic();
-//		new CreateWeightVector(Global.pathTestFile_tab,6, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
+//		WriteReadFromFile.formatMapFile(Global.pathServer+"article_cat2016_WV_6_Normalized",Global.pathServer+"article_cat2016_WV_6_Normalized_formated");
+		
+	 test();	
+//		formatNormalizedFileForWV();		
 		
 //		WriteReadFromFile.readZipFile(Global.pathLocal+"article_cat2016_WV_6_NotNormalized.zip");
 		
-//		new CreateWeightVector(Global.pathServer+"article_cats2016_7_DistinctPaths_formated_",6, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
+		new CreateWeightVector(Global.pathServer+"article_cats2016_7_DistinctPaths_formated_",6, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
+//		new CreateWeightVector(Global.pathTestFile_tab,6, HeuristicType.HEURISTIC_COMBINATION4TH5TH).main();
+		
 		
 		//WriteReadFromFile.formatForWeightVector();
 		//0-CategoryTrees_2016 //1-MainCategoryFile //2-article_categories_clean2016 //3-
@@ -93,10 +97,25 @@ public class Main {
 //		ComparisonFunctions.compareMaps(WriteReadFromFile.readTestSet_tab("Comparison"+File.separator+"article_cats_formated_2016.tsv"),
 //				WriteReadFromFile.readTestSet_coma("Comparison"+File.separator+"article_cats_formated.csv"));
 	}
+	private static void test() {
+		
+		int totalEntitCount = 3976485;
+		double inven3=515908;
+		double f=0.25;
+		//1 0.5 0.25 0.125 0.0625 0.03125
+		System.out.println(f*Math.log10(totalEntitCount*1.0/inven3));
+		
+		
+	}
+	private static void formatNormalizedFileForWV()
+	{
+		
+		WriteReadFromFile.writeSetFile(WriteReadFromFile.formatForWeightVector(WriteReadFromFile.readTestSet_tab(Global.pathServer+"article_cat2016_WV_6_Normalized_formated")),Global.pathServer+"articleCat_2016_Depth6_WV");
+	}
 	private static void startCalculationAfterHeuristic()
 	{
 		final Map<String, HashMap<String, Double>> mapHeuristicResults = WriteReadFromFile
-				.readTestSet_tab(Global.pathLocal+"article_cat2016_WV_6_NotNormalized_formated");
+				.readTestSet_tab(Global.pathServer+"article_cat2016_WV_6_Normalized_formated");
 		
 		Normalization.normalize_LevelBased_Mary(mapHeuristicResults, 6);
 	}

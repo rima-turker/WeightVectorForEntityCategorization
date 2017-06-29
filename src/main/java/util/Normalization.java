@@ -99,14 +99,16 @@ public class Normalization
 				arrList.add(db);
 			}
 		}
-		
+		Collections.sort(arrList);
+		 
 		double[] target = new double[arrList.size()];
 		 for (int i = 0; i < target.length; i++) {
 		    target[i] = arrList.get(i);                // java 1.5+ style (outboxing)
 		 }
 		 
 		 double threshold = FindQuartile.findOutliers(target);
-			
+		 
+		  System.out.println("Thereshould value is "+threshold);
 			long positive = 0;
 			long negative = 0;
 			for (int i = 0; i < target.length; i++) {
@@ -117,59 +119,44 @@ public class Normalization
 			    }
 			 }
 			
-			
 			double keepPercentage = (100.*positive/target.length);
 			
 			System.out.println("keep percenatge "+keepPercentage);
-			System.out.println("remove percentage "+(100- keepPercentage));
-//			
-//			
-//			
-//			
-//				/*
-//				 * Here find the value
-//				 */
-//				Double max = Collections.max(hset_levelallValues);
-//				//System.out.println(i.toString()+":"+max);
-//				for (Entry<String, HashMap<String, Double>> entry :mapAggregatedTillDepth.entrySet()) 
-//				{
-//					if (entry.getKey().contains(Global.str_depthSeparator+depth)) 
-//					{
-//						HashMap<String, Double> hmap_CatAndVal = new HashMap<>(entry.getValue());
-//						
-//						HashMap<String, Double> hmap_resultCatAndVal= new LinkedHashMap<>();
-//						
-//						for (Entry<String, Double> entry_CatAndVal :hmap_CatAndVal.entrySet()) 
-//						{
-//							if (entry_CatAndVal.getValue()>max) 
-//							{
-//								hmap_resultCatAndVal.put(entry_CatAndVal.getKey(), (double)max);
-//							}
-//							else
-//							{
-//								hmap_resultCatAndVal.put(entry_CatAndVal.getKey(), (entry_CatAndVal.getValue()));
-//							}
-//							
-//							
-//						}
-//						
-//						mapResultNormalized.put(entry.getKey(), hmap_resultCatAndVal);
-//					}
-//				}
-//			}
-//			else
-//			{
-//				int count=0;
-//				for (Entry<String, HashMap<String, Double>> entry :mapAggregatedTillDepth.entrySet()) 
-//				{
-//					if (entry.getKey().contains(Global.str_depthSeparator+depth)) 
-//					{
-//						mapResultNormalized.put(entry.getKey(), entry.getValue());
-//						count++;
-//					}
-//				}
-//			}
-		
+			System.out.println("remove percentage "+(100-keepPercentage));
+
+			int countValuesAboveT = 0;
+			int countValuesBlowT = 0;
+			
+
+			for (Entry<String, HashMap<String, Double>> entry :mapAggregatedTillDepth.entrySet()) 
+			{
+				if (entry.getKey().contains(Global.str_depthSeparator+depth)) 
+				{
+					HashMap<String, Double> hmap_CatAndVal = new HashMap<>(entry.getValue());
+					
+					HashMap<String, Double> hmap_resultCatAndVal= new LinkedHashMap<>();
+					
+					for (Entry<String, Double> entry_CatAndVal :hmap_CatAndVal.entrySet()) 
+					{
+						if (entry_CatAndVal.getValue()>threshold) 
+						{
+							hmap_resultCatAndVal.put(entry_CatAndVal.getKey(), 1.0);
+							countValuesAboveT++;
+						}
+						else
+						{
+							hmap_resultCatAndVal.put(entry_CatAndVal.getKey(), (double)(entry_CatAndVal.getValue()*1.0)/threshold);
+							countValuesBlowT++;
+						}
+						
+						
+					}
+					
+					mapResultNormalized.put(entry.getKey(), hmap_resultCatAndVal);
+				}
+			}
+			System.out.println("countValuesAboveT  "+countValuesAboveT);
+			System.out.println("countValuesBlowT "+countValuesBlowT);
 		return mapResultNormalized;
 	}
 	public static Map<String, HashMap<String, Double>>  normalize_LevelBased(Map<String, HashMap<String, Double>> hmap_addCatValuesTillDepth) 
