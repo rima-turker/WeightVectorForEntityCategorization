@@ -331,12 +331,47 @@ public class WriteReadFromFile
 		
 	}
 	
+	public static Map<String, String> entityNameMapCase(String fileName)
+	{
+		Map<String, String> mapResults = new HashMap<>();
+		
+		try {
+			String line = null;
+			int i =0;
+			BufferedReader br_MainFile = new BufferedReader(new FileReader(fileName));
+			
+			while ((line = br_MainFile.readLine()) != null) 
+			{
+				String[] split = line.replaceAll(">", "").split(" ");
+//				System.out.println(split[0]+" "+split[1]);
+//				System.out.println("for Map "+split[0].toLowerCase()+" "+split[0]);
+				mapResults.put(split[0].toLowerCase(), split[0]);
+			}
+			br_MainFile.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Size of Entity Map "+mapResults.size() );
+		return mapResults;
+		
+	}
+	/*
+	 * This function only changes the format of the WV for evaluation
+	 * However since evaluation format requers Capital letter for each entity, in the first line Mapping is used to convert each entity to
+	 * a capital letter
+	 */
 	public static HashSet<String> formatForWeightVector(Map<String, HashMap<String, Double>> mapToFormat)
 	{
+		Map<String, String> mapEntities = new HashMap<>(entityNameMapCase(Global.pathServer+"article_categories_clean2016_CatFiltered_7"));
+		
+		
 		//<$100_Film_Festival>      < 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,0 ,0 ,0 ,0 ,0 ,0>
 		
 		//String line= "albert_einstein	7={chemistry=0.05945411586914874, politics=1.6804591596553597, transport=0.103678303083399, history=0.7341221734991089, engineering=0.4063858979926278, philosophy=2.9891100754301267, literature=0.46382888130830713, economics=0.3486273820841701, psychology=0.6903195854275956, communication=0.024007225726569038, arts=0.44858320162873133, architecture=0.10931021437959335, physics=8.117516056507183, outer_space=0.3771555550903578, mathematics=0.2757756240130567, inventions=2.8424083313936026, photography=3.5235875870740054}";
 		//<albert_einstein>	<0.0 ,0.10931 ,0.44858 ,0.0 ,0.0 ,0.0 ,0.0 ,0.0 ,0.05945 ,0.0 ,0.02401 ,0.0 ,0.34863 ,0.0 ,0.40639 ,0.0 ,0.0 ,0.73412 ,2.84241 ,0.46383 ,0.27578 ,0.0 ,0.0 ,0.37716 ,0.0 ,2.98911 ,3.52359 ,8.11752 ,0.0 ,1.68046 ,0.0 ,0.69032 ,0.10368 ,0.0 ,0.0>
+		
+		
 		HashSet<String> setResult = new HashSet<>();
 //		String entityName = line.split("\t")[0];
 //		String[]  strCats = line.split("\t")[1].replace("7={", "").replace("}", "").replaceAll(" ", "").split(",");
@@ -353,8 +388,6 @@ public class WriteReadFromFile
 				mapCat.put(line.replaceAll(">", ""), i);
 				i++;
 			}
-			
-			
 			
 			for (Entry<String, HashMap<String, Double>> entry : mapToFormat.entrySet()) {
 				
@@ -379,27 +412,40 @@ public class WriteReadFromFile
 				Locale.setDefault(Locale.US);
 				DecimalFormat df = new DecimalFormat("0.00000");
 				
-				String wv= "<"+str_entityName+">"+"\t"+"<";
 				
-				
-				for (int j = 0; j < result.length; j++) 
-				{
+				//String wv= "<"+str_entityName+">"+"\t"+"<";
+				if (mapEntities.containsKey(str_entityName)) {
 					
-					double val = Double.valueOf(result[j]);
-					String strformated = String.valueOf(val);
-					if (val>0) 
+					
+					String wv= "<"+mapEntities.get(str_entityName)+">"+"\t"+"<"; 
+					
+					for (int j = 0; j < result.length; j++) 
 					{
-						strformated = df.format(val);
+						
+						double val = Double.valueOf(result[j]);
+						String strformated = String.valueOf(val);
+						if (val>0) 
+						{
+							strformated = df.format(val);
+						}
+						wv+=strformated+" ,";
+						//System.out.print(strformated+" ,");
 					}
-					wv+=strformated+" ,";
-					//System.out.print(strformated+" ,");
+					
+					wv+=">";
+					wv=wv.replace(" ,>", ">");
+					//System.out.println();
+					if (setResult.contains(wv)) {
+						System.out.println(wv);
+					}
+					setResult.add(wv);
+					//System.out.println(wv);
+				}
+				else
+				{
+					System.out.println("ERROR "+str_entityName);
 				}
 				
-				wv+=">";
-				wv=wv.replace(" ,>", ">");
-				//System.out.println();
-				setResult.add(wv);
-				//System.out.println(wv);
 				
 			}
 			System.out.println("Size of the WV(total entity Count) "+ setResult.size());
@@ -413,8 +459,6 @@ public class WriteReadFromFile
 //				result[mapCat.get(cat[0])] =cat[1]; 
 //			}
 			
-			
-		
 			br_MainFile.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

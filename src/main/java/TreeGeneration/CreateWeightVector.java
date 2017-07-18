@@ -93,7 +93,7 @@ public class CreateWeightVector
 //		System.out.println("Finished writing");
 		
 		final Map<String, HashMap<String, Double>> hmap_normalizedDepthBased = Normalization
-				.normalize_LevelBased_Mary(mapAggregatedTillDepth,depth);
+				.normalize_LevelBasedDetectingOutliers(mapAggregatedTillDepth,depth);
 //		
 		WriteReadFromFile.writeMapToAFile(hmap_normalizedDepthBased,Global.pathServer+"article_cat2016_WV_"+depth+"_Normalized");
 		

@@ -5,13 +5,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import TreeGeneration.FindQuartile;
 import TreeGeneration.Global;
-import TreeGeneration.WriteReadFromFile;
 
 public class Normalization 
 {
@@ -84,8 +82,10 @@ public class Normalization
 		}
 		return hmap_heuResultNormalized;
 	}
-	
-	public static Map<String, HashMap<String, Double>>  normalize_LevelBased_Mary(Map<String, HashMap<String, Double>> mapAggregatedTillDepth,int depth) 
+	/*
+	 * This function normalize WV based on its level after detecting outliers
+	 */
+	public static Map<String, HashMap<String, Double>>  normalize_LevelBasedDetectingOutliers(Map<String, HashMap<String, Double>> mapAggregatedTillDepth,int depth) 
 	{
 		
 		Map<String, HashMap<String, Double>> mapResultNormalized = new LinkedHashMap<>();
